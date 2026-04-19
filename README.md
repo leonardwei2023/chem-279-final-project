@@ -51,7 +51,8 @@ cmake --build .
 ```
 ## Repository Structure
 ```
-cndo2_project_repo/
+chem279_final_project_repo/
+
 ├── CMakeLists.txt        
 ├── README.md             
 
