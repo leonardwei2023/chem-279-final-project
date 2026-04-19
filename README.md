@@ -54,7 +54,8 @@ cmake --build .
 chem279_final_project_repo/
 
 ├── CMakeLists.txt        
-├── README.md             
+├── README.md
+├── .gitignore             
 
 ├── src/                  
 │   ├── main.cpp          
