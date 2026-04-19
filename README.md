@@ -1,61 +1,60 @@
-# Calculation of Molecular Dipole Moments and Basic Vibrational Frequencies using CNDO/2. 
+# CNDO/2 Molecular Properties and Vibrational Analysis
 
-David Houshangi - davidhoushangi@berkeley.edu 
+Final project for CHEM 279: Numerical Algorithms Applied to Computational Quantum Chemistry
 
-Leonard Ming Wei - dranoelmi@berkeley.edu  
+## Project Overview
 
-# Project Overview 
+In this project, we extend our CNDO/2 implementation from earlier assignments to compute additional molecular properties beyond total energy.
 
-Our goal is to extend our current CNDO/2 density calculations to include dipole moments and to 
-visualize the vibrational frequencies of a molecule. 
+Specifically, we add:
 
-# Objectives 
+- molecular dipole moment calculation  
+- finite-difference Hessian construction  
+- vibrational frequency estimation  
+- normal mode visualization using `.xyz` animations  
 
-1. Our first objective is to compute the molecular dipole. 
-2. Our second objective is to implement a basic implementation of vibrational analysis.
+The goal is to show that once we have a converged electronic structure, we can extract meaningful physical properties from it.
 
-# Methodology 
+## Motivation
 
-## a. Dipole Calculations 
+Up to now, CNDO/2 has mostly been used to compute energies and densities. However, the density matrix actually contains much more information.
 
-i. Compute x, y, z dipole components from density matrix and atomic partial 
-charges 
+## What this project does
 
-ii. Compute final dipole vector from components and convert to Debye
+### Dipole moments
+We compute the molecular dipole using nuclear + electronic contributions.
 
-iii. (Optional) Visualize dipole vector and charge distribution using VMD or 
-Avogadro 
+### Finite-difference Hessian
 
-## b. Vibrational Analysis (Finite Differences) 
+H_ij ≈ [E(x+h_i+h_j) - E(x+h_i-h_j) - E(x-h_i+h_j) + E(x-h_i-h_j)] / (4 h^2)
 
-i. Randomly displace atoms 
+### Vibrational frequencies
 
-ii. Recompute CNDO/2 and Hessian 
+We build the Hessian, mass-weight it, and diagonalize.
 
-iii. Convert Hessian to mass-weighted coordinates  𝐻𝑖𝑗
-' = 𝐻𝑖𝑗
-𝑚
-𝑖
-𝑚𝑗
+### Visualization
 
-iv. Diagonalize mass-weighted Hessian to extract frequencies  𝑣 𝑖 
-= 1
+Normal modes are exported as .xyz animations for Avogadro/VMD.
 
-v. Plot frequencies using matplotlib 
+## Build
+```
+mkdir build
+cd build
+cmake ..
+cmake --build .
+```
 
+## Run
 
-# Planned Experiments 
-2π𝑐
-λ
-𝑖
-These implementations will be tested on small molecules with simpler geometric structures to 
-ensure numerical accuracy. 
+```
+./cndo2_project ../examples/hcl.xyz --step 0.01 --animate
+```
 
-1. Dipole moments will be calculated for molecules such as Hydrogen Chloride (HCl), 
-water (H2O), ammonium (NH3).
+## Notes
+Replace the mock CNDO engine with your real implementation.
 
-2. Vibrational frequency analysis will be performed on small molecules such as HCl and H2 
-to maintain the computational efficiency.
-  
-Upon analysis of the results, trends in molecular polarity and vibrational behavior will be 
-identified, with attempts for them to be qualitatively juxtaposed to expected physical behavior. 
+## Authors
+
+David Houshangi
+
+Leonard Ming Wei
