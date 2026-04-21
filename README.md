@@ -1,6 +1,8 @@
 # CNDO/2 Molecular Properties and Vibrational Analysis
 
-Final project for CHEM 279: Numerical Algorithms Applied to Computational Quantum Chemistry
+CHEM 279 Final project:
+
+Numerical Algorithms Applied to Computational Quantum Chemistry
 
 ## Project Overview
 
