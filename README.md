@@ -89,7 +89,6 @@ chem279_final_project_repo/
 ```
 
 ## Notes
-Replace the mock CNDO engine with your real implementation.
 
 ## Authors
 
