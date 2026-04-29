@@ -1,10 +1,9 @@
-
 #ifndef MOLECULE_H
 #define MOLECULE_H
 
 #include <armadillo>
-#include <vector>
 #include <string>
+#include <vector>
 
 class Molecule {
 public:
