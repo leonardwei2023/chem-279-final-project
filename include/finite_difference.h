@@ -1,23 +1,36 @@
-#ifndef FINITE_DIFFERENCE_H
-#define FINITE_DIFFERENCE_H
+#ifndef VIBRATIONAL_FREQUENCY_H
+#define VIBRATIONAL_FREQUENCY_H
 
 #include <armadillo>
 #include "molecule.h"
 
-// Builds the Cartesian Hessian using finite differences of the CNDO/2 energy:
+// Main class for finite-difference vibrational frequency analysis:
 
-arma::mat compute_hessian_finite_difference(Molecule mol, double step_size);
+class VibrationalFrequencyAnalyzer {
+public:
 
-// Converts the normal Hessian into a mass-weighted Hessian:
+    // Constructor:
 
-arma::mat mass_weight_hessian(const arma::mat& hessian, const Molecule& mol);
+    VibrationalFrequencyAnalyzer(double step_size);
 
-// Diagonalizes the mass-weighted Hessian and converts eigenvalues to cm^-1:
+    // Builds the Cartesian Hessian using finite differences:
 
-arma::vec compute_frequencies_cm(const arma::mat& mass_weighted_hessian);
+    arma::mat compute_hessian(Molecule mol);
 
-// Prints all modes in a clean table:
+    // Converts Hessian to mass-weighted Hessian:
 
-void print_frequencies(const arma::vec& frequencies);
+    arma::mat mass_weight_hessian(const arma::mat& hessian, const Molecule& mol);
+
+    // Diagonalizes mass-weighted Hessian and returns frequencies in cm^-1:
+
+    arma::vec compute_frequencies(const arma::mat& mass_weighted_hessian);
+
+    // Prints frequencies nicely:
+
+    void print_frequencies(const arma::vec& frequencies);
+
+private:
+    double h;
+};
 
 #endif
