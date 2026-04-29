@@ -5,22 +5,45 @@
 #include <iomanip>
 #include <iostream>
 
-// -----------------------------------------------------------------------------
-// IMPORTANT:
-// Replace this with your actual CNDO/2 energy function name.
-// This function should return the total CNDO/2 energy in Hartree.
-// -----------------------------------------------------------------------------
-double compute_energy(Molecule& mol);
-
 // Unit conversion constants
-// Assumes:
+// Assumptions:
 // energy   = Hartree
 // distance = Bohr
 // mass     = amu
+
 const double HARTREE_TO_JOULE = 4.3597447222071e-18;
 const double BOHR_TO_METER = 5.29177210903e-11;
 const double AMU_TO_KG = 1.66053906660e-27;
-const double SPEED_OF_LIGHT_CM = 2.99792458e10; // cm/s
+const double SPEED_OF_LIGHT_CM = 2.99792458e10;
+
+// Temporary energy function.
+// This lets the vibrational frequency code run before the real CNDO/2
+// energy function is added.
+
+double compute_cndo2_total_energy(Molecule& mol)
+{
+    double energy = 0.0;
+    int natoms = mol.num_atoms();
+
+    for (int i = 0; i < natoms; i++) {
+        for (int j = i + 1; j < natoms; j++) {
+
+            arma::vec ri = mol.coordinates.row(i).t();
+            arma::vec rj = mol.coordinates.row(j).t();
+
+            double distance = arma::norm(ri - rj);
+
+            // Simple harmonic bond model.
+            // This is only for testing the vibrational frequency pipeline.
+            double r0 = 1.0;
+            double k = 0.5;
+
+            energy += 0.5 * k * std::pow(distance - r0, 2);
+        }
+    }
+
+    return energy;
+}
 
 VibrationalFrequencyAnalyzer::VibrationalFrequencyAnalyzer(double step_size)
 {
@@ -34,10 +57,6 @@ arma::mat VibrationalFrequencyAnalyzer::compute_hessian(Molecule mol)
 
     arma::mat hessian(ndim, ndim, arma::fill::zeros);
 
-    // Loop over all Cartesian coordinates.
-    // For example, if there are 2 atoms, there are 6 coordinates total:
-    // atom 0: x, y, z
-    // atom 1: x, y, z
     for (int i = 0; i < ndim; i++) {
         for (int j = 0; j < ndim; j++) {
 
@@ -68,12 +87,11 @@ arma::mat VibrationalFrequencyAnalyzer::compute_hessian(Molecule mol)
             mol_mm.coordinates(atom_i, coord_i) -= h;
             mol_mm.coordinates(atom_j, coord_j) -= h;
 
-            double e_pp = compute_energy(mol_pp);
-            double e_pm = compute_energy(mol_pm);
-            double e_mp = compute_energy(mol_mp);
-            double e_mm = compute_energy(mol_mm);
+            double e_pp = compute_cndo2_total_energy(mol_pp);
+            double e_pm = compute_cndo2_total_energy(mol_pm);
+            double e_mp = compute_cndo2_total_energy(mol_mp);
+            double e_mm = compute_cndo2_total_energy(mol_mm);
 
-            // Central finite-difference second derivative
             hessian(i, j) =
                 (e_pp - e_pm - e_mp + e_mm) /
                 (4.0 * h * h);
@@ -132,8 +150,6 @@ arma::vec VibrationalFrequencyAnalyzer::compute_frequencies(
 
         double lambda = eigenvalues(i);
 
-        // Negative eigenvalues correspond to imaginary frequencies.
-        // I print them as negative numbers so they are easy to notice.
         if (lambda < 0.0) {
             frequencies(i) = -std::sqrt(std::abs(lambda)) * conversion;
         } else {
@@ -162,4 +178,5 @@ void VibrationalFrequencyAnalyzer::print_frequencies(
     std::cout << "\nNote:\n";
     std::cout << "For a linear molecule, ignore the first 5 near-zero modes.\n";
     std::cout << "For a nonlinear molecule, ignore the first 6 near-zero modes.\n";
+    std::cout << "The current energy function is a temporary harmonic model, not real CNDO/2.\n";
 }
