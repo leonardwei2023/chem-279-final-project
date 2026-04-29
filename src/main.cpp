@@ -1,4 +1,3 @@
-
 #include <armadillo>
 #include <iostream>
 
@@ -7,34 +6,29 @@
 
 int main()
 {
-    std::cout << "Starting Vibrational Frequency Analysis...\n";
+    std::cout << "Starting vibrational frequency test...\n";
 
-    // Create a simple test molecule (H2)
-    // This lets the code run even without file input.
-
-  
     Molecule mol;
-
     mol.set_num_atoms(2);
 
-    // Coordinates in Bohr 
-  
-    mol.coordinates = arma::mat(2, 3, arma::fill::zeros);
+    // Simple H2 test molecule.
+    // Coordinates are in Bohr.
+    
+    mol.set_symbol(0, "H");
+    mol.set_symbol(1, "H");
 
-    // Place two hydrogen atoms along z-axis
-  
+    mol.set_atomic_mass(0, 1.00784);
+    mol.set_atomic_mass(1, 1.00784);
+
+    mol.coordinates(0, 0) = 0.0;
+    mol.coordinates(0, 1) = 0.0;
     mol.coordinates(0, 2) = 0.0;
-    mol.coordinates(1, 2) = 1.4;  // bond length (approx)
 
-    // Atomic masses (amu)
-  
-    mol.set_atomic_mass(0, 1.0);  // H
-    mol.set_atomic_mass(1, 1.0);  // H
+    mol.coordinates(1, 0) = 0.0;
+    mol.coordinates(1, 1) = 0.0;
+    mol.coordinates(1, 2) = 1.4;
 
-
-      // Vibrational frequency analysis
-
-      double step_size = 0.005;
+    double step_size = 0.005;
 
     VibrationalFrequencyAnalyzer vib(step_size);
 
