@@ -4,7 +4,6 @@
 #include <armadillo>
 #include "molecule.h"
 
-// Main class for finite-difference vibrational frequency analysis
 class VibrationalFrequencyAnalyzer {
 public:
     VibrationalFrequencyAnalyzer(double step_size);
