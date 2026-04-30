@@ -19,3 +19,8 @@ add_executable(vibrational_frequency
 )
 
 target_link_libraries(vibrational_frequency Eigen3::Eigen)
+
+add_executable(cndo_energy
+    src/cndo_energy.cpp
+    src/molecule.cpp
+)
