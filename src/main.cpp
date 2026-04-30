@@ -12,7 +12,7 @@ int main() {
         int hessian_size = 3 * molecule.get_num_atoms();
 
         Hessian hessian;
-        hessian.read_from_file("input/hessian.dat", hessian_size);
+        hessian.read_from_file("input/h2o_hessian.dat", hessian_size);
 
         Vibrations vibrations;
         vibrations.compute(molecule, hessian);
