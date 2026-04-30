@@ -1,6 +1,6 @@
 #include "molecule.h"
 #include "hessian.h"
-#include "vibrations.h"
+#include "vibration.h"
 
 #include <iostream>
 
