@@ -1,7 +1,6 @@
 #include "molecule.h"
 
 #include <fstream>
-#include <iostream>
 #include <stdexcept>
 
 Molecule::Molecule() {
@@ -29,8 +28,8 @@ void Molecule::read_xyz(const std::string& filename) {
     file >> num_atoms;
 
     std::string line;
-    std::getline(file, line); 
-    std::getline(file, line); 
+    std::getline(file, line);
+    std::getline(file, line);
 
     symbols.clear();
     coordinates.clear();
@@ -40,7 +39,9 @@ void Molecule::read_xyz(const std::string& filename) {
         std::string symbol;
         double x, y, z;
 
-        file >> symbol >> x >> y >> z;
+        if (!(file >> symbol >> x >> y >> z)) {
+            throw std::runtime_error("Bad xyz format in file: " + filename);
+        }
 
         symbols.push_back(symbol);
         coordinates.push_back(x);
@@ -48,12 +49,32 @@ void Molecule::read_xyz(const std::string& filename) {
         coordinates.push_back(z);
         masses.push_back(get_mass_from_symbol(symbol));
     }
+}
 
-    file.close();
+void Molecule::write_xyz(const std::string& filename) const {
+    std::ofstream file(filename);
+
+    if (!file.is_open()) {
+        throw std::runtime_error("Could not write xyz file: " + filename);
+    }
+
+    file << num_atoms << "\n";
+    file << "temporary displaced molecule\n";
+
+    for (int i = 0; i < num_atoms; i++) {
+        file << symbols[i] << " "
+             << coordinates[3 * i] << " "
+             << coordinates[3 * i + 1] << " "
+             << coordinates[3 * i + 2] << "\n";
+    }
 }
 
 int Molecule::get_num_atoms() const {
     return num_atoms;
+}
+
+int Molecule::get_num_coordinates() const {
+    return 3 * num_atoms;
 }
 
 std::vector<std::string> Molecule::get_symbols() const {
@@ -66,4 +87,12 @@ std::vector<double> Molecule::get_coordinates() const {
 
 std::vector<double> Molecule::get_masses() const {
     return masses;
+}
+
+double Molecule::get_coordinate(int index) const {
+    return coordinates[index];
+}
+
+void Molecule::set_coordinate(int index, double value) {
+    coordinates[index] = value;
 }
