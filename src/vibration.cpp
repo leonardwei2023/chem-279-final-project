@@ -1,5 +1,5 @@
 
-#include "vibrations.h"
+#include "vibration.h"
 
 #include <Eigen/Dense>
 #include <cmath>
