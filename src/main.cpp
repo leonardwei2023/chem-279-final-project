@@ -1,44 +1,27 @@
-#include <armadillo>
+#include "molecule.h"
+#include "hessian.h"
+#include "vibrations.h"
+
 #include <iostream>
 
-#include "molecule.h"
-#include "vibrational_frequency.h"
+int main() {
+    try {
+        Molecule molecule;
+        molecule.read_xyz("input/h2o.xyz");
 
-int main()
-{
-    std::cout << "Starting vibrational frequency test...\n";
+        int hessian_size = 3 * molecule.get_num_atoms();
 
-    Molecule mol;
-    mol.set_num_atoms(2);
+        Hessian hessian;
+        hessian.read_from_file("input/hessian.dat", hessian_size);
 
-    // Simple H2 test molecule.
-    // Coordinates are in Bohr.
-    
-    mol.set_symbol(0, "H");
-    mol.set_symbol(1, "H");
-
-    mol.set_atomic_mass(0, 1.00784);
-    mol.set_atomic_mass(1, 1.00784);
-
-    mol.coordinates(0, 0) = 0.0;
-    mol.coordinates(0, 1) = 0.0;
-    mol.coordinates(0, 2) = 0.0;
-
-    mol.coordinates(1, 0) = 0.0;
-    mol.coordinates(1, 1) = 0.0;
-    mol.coordinates(1, 2) = 1.4;
-
-    double step_size = 0.005;
-
-    VibrationalFrequencyAnalyzer vib(step_size);
-
-    arma::mat hessian = vib.compute_hessian(mol);
-    arma::mat mass_weighted_hessian = vib.mass_weight_hessian(hessian, mol);
-    arma::vec frequencies = vib.compute_frequencies(mass_weighted_hessian);
-
-    vib.print_frequencies(frequencies);
-
-    std::cout << "\nDone.\n";
+        Vibrations vibrations;
+        vibrations.compute(molecule, hessian);
+        vibrations.print_frequencies();
+    }
+    catch (const std::exception& error) {
+        std::cout << "Error: " << error.what() << std::endl;
+        return 1;
+    }
 
     return 0;
 }
