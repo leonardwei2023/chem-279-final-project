@@ -1,26 +1,28 @@
 #ifndef MOLECULE_H
 #define MOLECULE_H
 
-#include <armadillo>
 #include <string>
 #include <vector>
 
 class Molecule {
-public:
-    arma::mat coordinates;
+private:
+    int num_atoms;
     std::vector<std::string> symbols;
+    // x1 y1 z1 x2 y2 z2 ...
+    std::vector<double> coordinates; 
     std::vector<double> masses;
 
+    double get_mass_from_symbol(const std::string& symbol) const;
+
+public:
     Molecule();
 
-    void set_num_atoms(int n);
-    int num_atoms() const;
+    void read_xyz(const std::string& filename);
 
-    void set_symbol(int index, const std::string& symbol);
-    std::string atomic_symbol(int index) const;
-
-    void set_atomic_mass(int index, double mass);
-    double atomic_mass(int index) const;
+    int get_num_atoms() const;
+    std::vector<std::string> get_symbols() const;
+    std::vector<double> get_coordinates() const;
+    std::vector<double> get_masses() const;
 };
 
 #endif
