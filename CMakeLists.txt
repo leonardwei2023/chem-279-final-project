@@ -12,7 +12,7 @@ add_executable(vibrational_frequency
     src/main.cpp
     src/molecule.cpp
     src/hessian.cpp
-    src/vibrations.cpp
+    src/vibration.cpp
 )
 
 target_link_libraries(vibrational_frequency Eigen3::Eigen)
