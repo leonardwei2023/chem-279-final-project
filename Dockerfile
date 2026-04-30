@@ -1,11 +1,9 @@
 FROM ubuntu:22.04
 
-# Avoiding prompts:
-
+# Avoid prompts
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Installing dependencies:
-
+# Install dependencies
 RUN apt-get update && apt-get install -y \
     build-essential \
     cmake \
@@ -13,18 +11,14 @@ RUN apt-get update && apt-get install -y \
     libeigen3-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Setting working directory:
-
+# Set working directory
 WORKDIR /app
 
-# Copying project files:
-
+# Copy project files
 COPY . .
 
-# Building:
+# Build (fixed)
+RUN cmake -S . -B build && cmake --build build
 
-RUN mkdir build && cd build && cmake .. && make
-
-# Default command:
-
+# Default command
 CMD ["bash"]
