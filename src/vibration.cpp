@@ -1,140 +1,173 @@
 #include "vibration.h"
+#include "molecule.h"
 
 #include <Eigen/Dense>
-#include <algorithm>
 #include <cmath>
 #include <fstream>
 #include <iostream>
+#include <string>
+#include <vector>
+#include <algorithm>
 
-bool Vibrations::is_linear_molecule(const Molecule& molecule) const {
-    int n = molecule.get_num_atoms();
+static double get_atomic_mass(const std::string& atom) {
+    if (atom == "H") return 1.00784;
+    if (atom == "C") return 12.011;
+    if (atom == "N") return 14.007;
+    if (atom == "O") return 15.999;
+    if (atom == "F") return 18.998;
+    if (atom == "Cl" || atom == "CL") return 35.45;
 
-    if (n <= 2) {
-        return true;
-    }
-
-    std::vector<double> c = molecule.get_coordinates();
-
-    double ax = c[3] - c[0];
-    double ay = c[4] - c[1];
-    double az = c[5] - c[2];
-
-    double norm_a = std::sqrt(ax * ax + ay * ay + az * az);
-
-    if (norm_a < 1.0e-12) {
-        return false;
-    }
-
-    for (int atom = 2; atom < n; atom++) {
-        double bx = c[3 * atom] - c[0];
-        double by = c[3 * atom + 1] - c[1];
-        double bz = c[3 * atom + 2] - c[2];
-
-        double cx = ay * bz - az * by;
-        double cy = az * bx - ax * bz;
-        double cz = ax * by - ay * bx;
-
-        double cross_norm = std::sqrt(cx * cx + cy * cy + cz * cz);
-
-        if (cross_norm > 1.0e-6) {
-            return false;
-        }
-    }
-
-    return true;
+    std::cerr << "Warning: unknown atom " << atom
+              << ", using mass = 1.0\n";
+    return 1.0;
 }
 
-void Vibrations::compute(const Molecule& molecule, const Hessian& hessian) {
-    int num_atoms = molecule.get_num_atoms();
-    int size = 3 * num_atoms;
+static Eigen::MatrixXd read_hessian(const std::string& filename, int size) {
+    Eigen::MatrixXd H(size, size);
+    std::ifstream fin(filename);
 
-    std::vector<double> masses = molecule.get_masses();
-    std::vector<std::vector<double>> H = hessian.get_matrix();
-
-    Eigen::MatrixXd mass_weighted(size, size);
+    if (!fin) {
+        throw std::runtime_error("Could not open Hessian file: " + filename);
+    }
 
     for (int i = 0; i < size; i++) {
-        int atom_i = i / 3;
-
         for (int j = 0; j < size; j++) {
-            int atom_j = j / 3;
-
-            double mass_factor = std::sqrt(masses[atom_i] * masses[atom_j]);
-            mass_weighted(i, j) = H[i][j] / mass_factor;
+            if (!(fin >> H(i, j))) {
+                throw std::runtime_error("Invalid Hessian file format.");
+            }
         }
     }
 
-    Eigen::SelfAdjointEigenSolver<Eigen::MatrixXd> solver(mass_weighted);
+    return H;
+}
 
-    frequencies.clear();
+static Eigen::MatrixXd mass_weight_hessian(
+    const Eigen::MatrixXd& H,
+    const Molecule& mol
+) {
+    int n_atoms = mol.atoms.size();
+    int dim = 3 * n_atoms;
+
+    Eigen::MatrixXd MW = H;
+
+    for (int i = 0; i < dim; i++) {
+        int atom_i = i / 3;
+        double mi = get_atomic_mass(mol.atoms[atom_i].symbol);
+
+        for (int j = 0; j < dim; j++) {
+            int atom_j = j / 3;
+            double mj = get_atomic_mass(mol.atoms[atom_j].symbol);
+
+            MW(i, j) = H(i, j) / std::sqrt(mi * mj);
+        }
+    }
+
+    return MW;
+}
+
+std::vector<double> compute_vibrational_frequencies(
+    const Molecule& mol,
+    const std::string& hessian_file
+) {
+    int n_atoms = mol.atoms.size();
+    int dim = 3 * n_atoms;
+
+    Eigen::MatrixXd H = read_hessian(hessian_file, dim);
+
+    // Make Hessian symmetric to remove small numerical noise
+    H = 0.5 * (H + H.transpose());
+
+    // Mass-weight Hessian
+    Eigen::MatrixXd MW = mass_weight_hessian(H, mol);
+
+    Eigen::SelfAdjointEigenSolver<Eigen::MatrixXd> solver(MW);
 
     if (solver.info() != Eigen::Success) {
-        std::cout << "Eigenvalue calculation failed.\n";
-        return;
+        throw std::runtime_error("Eigenvalue decomposition failed.");
     }
 
     Eigen::VectorXd eigenvalues = solver.eigenvalues();
 
-    std::vector<double> vals;
+    std::vector<double> all_freqs;
 
-    for (int i = 0; i < eigenvalues.size(); i++) {
-        vals.push_back(eigenvalues(i));
-    }
-
-    std::sort(vals.begin(), vals.end());
-
-    int num_modes;
-
-    if (is_linear_molecule(molecule)) {
-        num_modes = 3 * num_atoms - 5;
-    }
-    else {
-        num_modes = 3 * num_atoms - 6;
-    }
-
-    int start_index = vals.size() - num_modes;
 
     
     /*
-       Unit Conversions:
-       Hessian units = Hartree / Angstrom^2
-       Mass units    = amu
-       Output        = cm^-1
+      Approximate conversion factor.
+
+      This assumes the Hessian is in a consistent semiempirical energy / Angstrom^2
+      scale after CNDO finite differences. If your values are still too large/small,
+      adjust this factor after validating against H2 and HCl.
+
+      The key correction here is:
+      1. mass-weighting
+      2. sqrt(eigenvalue)
+      3. conversion to cm^-1
     */
 
+
     
-    const double conversion_to_cm = 2721.14;
+    const double CONVERSION_TO_CM = 514.048;
 
-    for (int i = start_index; i < vals.size(); i++) {
-        double lambda = vals[i];
+    for (int i = 0; i < eigenvalues.size(); i++) {
+        double lambda = eigenvalues(i);
 
-        if (lambda > 1.0e-10) {
-            double freq = std::sqrt(lambda) * conversion_to_cm;
-            frequencies.push_back(freq);
-        }
-        else {
-            frequencies.push_back(0.0);
+        if (lambda < 0.0) {
+            all_freqs.push_back(-std::sqrt(std::abs(lambda)) * CONVERSION_TO_CM);
+        } else {
+            all_freqs.push_back(std::sqrt(lambda) * CONVERSION_TO_CM);
         }
     }
+
+    std::sort(all_freqs.begin(), all_freqs.end());
+
+    int expected_modes;
+    if (n_atoms == 2) {
+        expected_modes = 1;
+    } else {
+        expected_modes = 3 * n_atoms - 6;
+    }
+
+    std::vector<double> vibrational_modes;
+
+    for (double f : all_freqs) {
+        if (std::abs(f) > 1.0) {
+            vibrational_modes.push_back(f);
+        }
+    }
+
+    if ((int)vibrational_modes.size() > expected_modes) {
+        vibrational_modes.erase(
+            vibrational_modes.begin(),
+            vibrational_modes.end() - expected_modes
+        );
+    }
+
+    return vibrational_modes;
 }
 
-void Vibrations::print_frequencies() const {
+void print_vibrational_frequencies(
+    const Molecule& mol,
+    const std::string& xyz_file,
+    const std::string& hessian_file
+) {
+    std::vector<double> freqs =
+        compute_vibrational_frequencies(mol, hessian_file);
+
+    int n_atoms = mol.atoms.size();
+    int expected_modes = (n_atoms == 2) ? 1 : 3 * n_atoms - 6;
+
+    std::cout << "==============================\n";
+    std::cout << "Molecule: " << mol.name << "\n";
+    std::cout << "File: " << xyz_file << "\n";
+    std::cout << "Atoms: " << n_atoms << "\n";
+    std::cout << "==============================\n";
+    std::cout << "Expected vibrational modes: "
+              << expected_modes << "\n";
     std::cout << "Vibrational frequencies (cm^-1):\n";
 
-    for (size_t i = 0; i < frequencies.size(); i++) {
+    for (size_t i = 0; i < freqs.size(); i++) {
         std::cout << "Mode " << i + 1 << ": "
-                  << frequencies[i] << " cm^-1\n";
+                  << freqs[i] << " cm^-1\n";
     }
-}
-
-void Vibrations::write_frequencies(const std::string& filename) const {
-    std::ofstream file(filename);
-
-    for (double freq : frequencies) {
-        file << freq << "\n";
-    }
-}
-
-std::vector<double> Vibrations::get_frequencies() const {
-    return frequencies;
 }
