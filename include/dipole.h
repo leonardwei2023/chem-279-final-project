@@ -4,7 +4,8 @@
 /**
  * DipoleMoment: Computes the molecular electric dipole moment from CNDO/2.
  *
- * From Lecture 16 (Lec16, slide 10), the SCF dipole moment is:
+ * From Lecture 16
+ * The SCF dipole moment is:
  *
  *   mu = d_SCF = sum_{mu,nu} P_{mu,nu} * d_{mu,nu}
  *              = electronic part + nuclear part
@@ -29,7 +30,7 @@
  * Units:
  *   - Coordinates in Angstrom, charges in electron units
  *   - 1 e * 1 Angstrom = 4.80320 Debye
- *   - Result reported in Debye
+ *   - Result reported in Debye - Add unit conversion later
  */
 
 #include "molecule.h"
