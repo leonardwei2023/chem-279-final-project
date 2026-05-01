@@ -5,6 +5,7 @@
 #include "validation.h"
 #include "vibration.h"
 
+#include <cmath>
 #include <cstdlib>
 #include <exception>
 #include <iostream>
@@ -27,6 +28,51 @@ std::string get_molecule_name(const std::string& filepath) {
     }
 
     return filename;
+}
+
+double get_atomic_number(const std::string& symbol) {
+    if (symbol == "H") return 1.0;
+    if (symbol == "C") return 6.0;
+    if (symbol == "N") return 7.0;
+    if (symbol == "O") return 8.0;
+    if (symbol == "F") return 9.0;
+    if (symbol == "Cl") return 17.0;
+
+    return 1.0;
+}
+
+double compute_simple_energy(const Molecule& molecule) {
+    std::vector<std::string> symbols = molecule.get_symbols();
+    std::vector<double> coords = molecule.get_coordinates();
+
+    int n = molecule.get_num_atoms();
+    double energy = 0.0;
+
+    for (int i = 0; i < n; i++) {
+        double xi = coords[3 * i];
+        double yi = coords[3 * i + 1];
+        double zi = coords[3 * i + 2];
+        double zi_charge = get_atomic_number(symbols[i]);
+
+        for (int j = i + 1; j < n; j++) {
+            double xj = coords[3 * j];
+            double yj = coords[3 * j + 1];
+            double zj = coords[3 * j + 2];
+            double zj_charge = get_atomic_number(symbols[j]);
+
+            double dx = xi - xj;
+            double dy = yi - yj;
+            double dz = zi - zj;
+
+            double r = std::sqrt(dx * dx + dy * dy + dz * dz);
+
+            if (r > 1.0e-8) {
+                energy += (zi_charge * zj_charge) / r;
+            }
+        }
+    }
+
+    return energy;
 }
 
 void print_molecule_info(const std::string& xyz_file, const Molecule& molecule) {
@@ -53,6 +99,7 @@ void print_usage() {
     std::cout << "./vibrational_frequency finite-diff xyz_file output_hessian step\n";
     std::cout << "./vibrational_frequency finite-diff-vib xyz_file output_hessian step\n";
     std::cout << "./vibrational_frequency validate computed_freq reference_freq\n";
+    std::cout << "./vibrational_frequency energy xyz_file\n";
     std::cout << "./vibrational_frequency dipole xyz_file\n";
 }
 
@@ -106,7 +153,7 @@ int main(int argc, char* argv[]) {
             if (command_from_env == nullptr) {
                 std::cout << "Error: CNDO_ENERGY_CMD is not set.\n";
                 std::cout << "Example:\n";
-                std::cout << "export CNDO_ENERGY_CMD=\"./build/cndo_energy\"\n";
+                std::cout << "export CNDO_ENERGY_CMD=\"./build/vibrational_frequency energy\"\n";
                 return 1;
             }
 
@@ -139,7 +186,7 @@ int main(int argc, char* argv[]) {
             if (command_from_env == nullptr) {
                 std::cout << "Error: CNDO_ENERGY_CMD is not set.\n";
                 std::cout << "Example:\n";
-                std::cout << "export CNDO_ENERGY_CMD=\"./build/cndo_energy\"\n";
+                std::cout << "export CNDO_ENERGY_CMD=\"./build/vibrational_frequency energy\"\n";
                 return 1;
             }
 
@@ -174,6 +221,20 @@ int main(int argc, char* argv[]) {
             std::vector<double> reference = Validation::read_frequencies(argv[3]);
 
             Validation::compare(computed, reference);
+        }
+
+        else if (mode == "energy") {
+            if (argc != 3) {
+                print_usage();
+                return 1;
+            }
+
+            Molecule molecule;
+            molecule.read_xyz(argv[2]);
+
+            double energy = compute_simple_energy(molecule);
+
+            std::cout << energy << "\n";
         }
 
         else if (mode == "dipole") {
