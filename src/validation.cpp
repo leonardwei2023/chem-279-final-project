@@ -14,10 +14,10 @@ std::vector<double> Validation::read_frequencies(const std::string& filename) {
     }
 
     std::vector<double> frequencies;
-    double value;
-
-    while (file >> value) {
-        frequencies.push_back(value);
+    std::string line;
+    while (std::getline(file, line)) {
+        if (line.empty() || line[0] == '#') continue;
+        try { frequencies.push_back(std::stod(line)); } catch (...) {}
     }
 
     if (frequencies.empty()) {
