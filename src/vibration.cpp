@@ -78,7 +78,7 @@ std::vector<double> compute_vibrational_frequencies(
     // Remove small numerical asymmetry.
     H = 0.5 * (H + H.transpose());
 
-    // Mass-weight Hessian: H_ij / sqrt(m_i m_j)
+    // Mass-weight Hessian.
     Eigen::MatrixXd MW = mass_weight_hessian(H, mol);
 
     Eigen::SelfAdjointEigenSolver<Eigen::MatrixXd> solver(MW);
@@ -94,14 +94,25 @@ std::vector<double> compute_vibrational_frequencies(
     /*
       Unit conversion:
 
-      If Hessian is in Hartree / Bohr^2 after mass weighting by amu,
-      then eigenvalue units are Eh / (amu * Bohr^2).
+      Your finite-difference Hessian uses Angstrom coordinates.
+      The physical conversion below expects Bohr-based length units.
 
-      omega^2 = lambda * Eh_to_J / (amu_to_kg * bohr_to_m^2)
-      frequency(cm^-1) = omega / (2*pi*c)
+      Therefore we convert the Hessian eigenvalues from Angstrom-based
+      coordinates to Bohr-based coordinates using:
+
+          lambda_bohr = lambda_angstrom * (Angstrom_to_Bohr)^2
+
+      Then:
+
+          omega^2 = lambda * Eh_to_J / (amu_to_kg * bohr_to_m^2)
+
+      and
+
+          frequency(cm^-1) = omega / (2*pi*c)
     */
     const double Eh_to_J = 4.3597447222071e-18;
     const double bohr_to_m = 5.29177210903e-11;
+    const double angstrom_to_bohr = 1.889726124565062;
     const double amu_to_kg = 1.66053906660e-27;
     const double c_cm_s = 2.99792458e10;
     const double two_pi = 2.0 * M_PI;
@@ -109,10 +120,12 @@ std::vector<double> compute_vibrational_frequencies(
     for (int i = 0; i < eigenvalues.size(); i++) {
         double lambda = eigenvalues(i);
 
-        // Skip tiny translational/rotational numerical noise.
         if (std::abs(lambda) < 1.0e-12) {
             continue;
         }
+
+        // Convert Hessian eigenvalue from Angstrom coordinate scale to Bohr scale.
+        lambda *= angstrom_to_bohr * angstrom_to_bohr;
 
         double omega2 =
             lambda * Eh_to_J / (amu_to_kg * bohr_to_m * bohr_to_m);
@@ -147,7 +160,7 @@ std::vector<double> compute_vibrational_frequencies(
         }
     }
 
-    // Keep the largest expected_modes frequencies.
+    // Keep the largest expected number of vibrational frequencies.
     if (static_cast<int>(vibrational_modes.size()) > expected_modes) {
         vibrational_modes.erase(
             vibrational_modes.begin(),
