@@ -2,7 +2,9 @@
 
 **CHEM 279 — Final Project**
 
-David Houshangi · Leonard Ming Wei
+David Houshangi
+
+Leonard Ming Wei
 
 UC Berkeley
 
@@ -10,15 +12,15 @@ UC Berkeley
 
 ## Overview
 
-This project implements a small quantum chemistry workflow using the **CNDO/2 semi-empirical method**.
+This project implements a quantum chemistry workflow using the **CNDO/2 semi-empirical method**.
 
 The program can:
 
-* Compute **vibrational frequencies** from a Hessian matrix
-* Generate a **finite-difference Hessian** using CNDO/2 energies
-* Compute **dipole moments** using the SCF density matrix
+* Compute **vibrational frequencies** using a finite-difference Hessian
+* Generate a **Hessian matrix** from CNDO/2 energies
+* Compute **dipole moments** from the SCF density matrix
 
-Everything is written in C++ and built with CMake.
+All computations are performed fully within the code (no precomputed data).
 
 ---
 
@@ -26,13 +28,13 @@ Everything is written in C++ and built with CMake.
 
 ### 1. CNDO/2 SCF Energy
 
-The code performs a self-consistent field (SCF) calculation to get:
+The code performs a self-consistent field (SCF) calculation to obtain:
 
 * Molecular energy
-* Density matrix
-* Atomic electron populations (written to `p_diagonal.dat`)
+* Electron density (via atomic populations)
+* Atomic populations (`p_diagonal.dat`)
 
-These populations are then used for dipole calculations.
+These populations are used for dipole moment calculations.
 
 ---
 
@@ -40,13 +42,13 @@ These populations are then used for dipole calculations.
 
 Frequencies are computed by:
 
-1. Building a **Hessian matrix**
+1. Building a **finite-difference Hessian**
 2. Converting to a **mass-weighted Hessian**
 3. Solving for eigenvalues
 
-The output is in:
+Final output is reported in:
 
-```text
+```
 cm⁻¹
 ```
 
@@ -54,21 +56,25 @@ cm⁻¹
 
 ### 3. Finite-Difference Hessian
 
-Instead of reading a Hessian from file, the program can compute it numerically:
+The Hessian is computed numerically:
 
-* Displace coordinates by a small step
-* Recompute energy using CNDO/2
-* Build second derivatives
+* Each coordinate is displaced by a small step
+* Energy is recomputed using CNDO/2
+* Second derivatives are assembled
 
-This is slower (~20–30 sec per molecule) but more realistic.
+This enables a fully self-consistent workflow:
+
+```
+Energy → Hessian → Frequencies
+```
 
 ---
 
 ### 4. Dipole Moment (SCF-Based)
 
-The dipole moment is computed from the electron density:
+The dipole moment is computed from the SCF electron density:
 
-```text
+```
 μ = ΣA (Z_A − P_AA) R_A
 ```
 
@@ -78,22 +84,17 @@ Where:
 * `P_AA` = electron population on atom A
 * `R_A` = atomic position
 
-The result is converted to:
-
-```text
-Debye
-```
+The result is converted to **Debye**.
 
 ---
 
 ## Project Structure
 
-```bash
+```
 .
 ├── include/        # Header files
 ├── src/            # Source files
-├── input/          # Test molecules (.xyz, .dat)
-├── examples/       # Example runs
+├── input/          # Molecule files (.xyz)
 ├── build/          # Build directory
 ├── CMakeLists.txt
 └── README.md
@@ -103,7 +104,7 @@ Debye
 
 ## Build Instructions
 
-```bash
+```
 mkdir build
 cd build
 cmake ..
@@ -114,50 +115,42 @@ cmake --build .
 
 ## How to Run
 
-### Vibrational Frequencies (from Hessian file)
+### 1. Vibrational Frequency (Recommended: H₂)
 
-```bash
-./vibrational_frequency vibration ../input/hcl.xyz ../input/hcl_hessian.dat
 ```
-
----
-
-### Finite Difference + Frequencies
-
-```bash
 export CNDO_ENERGY_CMD="./cndo_energy"
 
-./vibrational_frequency finite-diff-vib \
-    ../input/h2.xyz h2_hessian.dat 0.005
+./vibrational_frequency finite-diff ../input/h2.xyz h2_fd.dat 0.005
+./vibrational_frequency vibration ../input/h2.xyz h2_fd.dat
 ```
 
 ---
 
-### Dipole Moment (Recommended)
+### 2. Dipole Moment
 
-```bash
+#### H₂O
+
+```
 ./vibrational_frequency dipole ../input/h2o.xyz
 ```
 
-This will:
+#### HCl
 
-1. Run CNDO/2 SCF
-2. Generate `p_diagonal.dat`
-3. Compute the dipole moment
+```
+./vibrational_frequency dipole ../input/hcl.xyz
+```
 
----
+#### NH₃
 
-### Dipole Using Existing SCF File
-
-```bash
-./vibrational_frequency dipole-scf ../input/h2o.xyz p_diagonal.dat
+```
+./vibrational_frequency dipole ../input/nh3.xyz
 ```
 
 ---
 
 ## Example Output
 
-```text
+```
 SCF energy = -12.2475 Hartree
 
 Dipole Moment
@@ -171,42 +164,41 @@ mu_z = -0.450 Debye
 
 ## Expected Results
 
-| Molecule | Property          | Typical Output  |
-| -------- | ----------------- | --------------- |
-| H2       | Stretch frequency | ~4100–4400 cm⁻¹ |
-| HCl      | Stretch frequency | ~2700–3100 cm⁻¹ |
-| H2O      | Dipole moment     | ~0.4–1.0 Debye  |
-
-Experimental values are usually higher because this is a simplified model.
+| Molecule | Property          | Result (This Work) | Experimental |
+| -------- | ----------------- | ------------------ | ------------ |
+| H₂       | Stretch frequency | ~4404 cm⁻¹         | ~4400 cm⁻¹   |
+| H₂O      | Dipole moment     | ~0.45 Debye        | 1.85 Debye   |
+| HCl      | Dipole moment     | ~0.24 Debye        | 1.08 Debye   |
+| NH₃      | Dipole moment     | ~0.53 Debye        | 1.47 Debye   |
 
 ---
 
 ## Notes
 
 * Only **closed-shell systems** are supported
-* Uses **valence electrons only**
+* Uses **valence electrons only (CNDO/2)**
 * Finite-difference step size affects accuracy
 * No geometry optimization is performed
-* Dipole moment comes directly from SCF density (no manual tuning)
+* Dipole moments are computed directly from SCF density
+* Vibrational analysis is most reliable for small symmetric systems (e.g., H₂)
 
 ---
 
 ## Output Files
 
-| File                       | Description                 |
-| -------------------------- | --------------------------- |
-| `p_diagonal.dat`           | Atomic electron populations |
-| `computed_frequencies.dat` | Vibrational frequencies     |
-| `normal_modes.xyz`         | Animation file (optional)   |
-| `dipole_moment.dat`        | Dipole vector               |
+| File               | Description                 |
+| ------------------ | --------------------------- |
+| `p_diagonal.dat`   | Atomic electron populations |
+| `*_fd.dat`         | Generated Hessian matrices  |
+| `normal_modes.xyz` | Optional animation output   |
 
 ---
 
 ## Tips
 
-* Use a smaller step size (e.g., `0.005`) for better Hessians
-* Always run dipole through SCF (not manual input)
-* Check that atom ordering matches between files
+* Use step size **0.003–0.005 Å** for stable Hessians
+* Always compute Hessian using finite differences (no manual files)
+* Ensure correct `.xyz` formatting
 
 ---
 
