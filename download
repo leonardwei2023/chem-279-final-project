@@ -1,0 +1,11 @@
+build/
+*.o
+*.a
+*.out
+tmp_cndo_displaced_*.xyz
+computed_frequencies.dat
+dipole_moment.dat
+normal_modes.xyz
+__pycache__/
+*.pyc
+.DS_Store
