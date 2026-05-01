@@ -8,8 +8,10 @@ class Molecule {
 private:
     int num_atoms;
     std::vector<std::string> symbols;
-    std::vector<double> coordinates; // Angstrom: x1 y1 z1 x2 y2 z2 ...
-    std::vector<double> masses;      // amu
+     // Angstrom: x1 y1 z1 x2 y2 z2 ...
+    std::vector<double> coordinates; 
+    // amu
+    std::vector<double> masses;      
 
     double get_mass_from_symbol(const std::string& symbol) const;
 
