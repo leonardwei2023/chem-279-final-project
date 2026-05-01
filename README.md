@@ -164,7 +164,7 @@ mu_z = -0.450 Debye
 
 ## Results Summary
 
-| Molecule | Property           | Result (This Work) | Experimental |
+| Molecule | Property           | Result (Theoretical values) | Experimental values |
 |----------|-------------------|--------------------|--------------|
 | H₂       | Stretch frequency | ~4404 cm⁻¹         | ~4400 cm⁻¹   |
 | H₂O      | Dipole moment     | ~0.45 Debye        | 1.85 Debye   |
