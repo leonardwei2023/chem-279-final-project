@@ -17,13 +17,19 @@ static std::string get_molecule_name(const std::string& filepath) {
     std::string filename = (slash == std::string::npos)
                            ? filepath
                            : filepath.substr(slash + 1);
+
     size_t dot = filename.find_last_of(".");
-    if (dot != std::string::npos) filename = filename.substr(0, dot);
+    if (dot != std::string::npos) {
+        filename = filename.substr(0, dot);
+    }
+
     return filename;
 }
 
-static void print_molecule_info(const std::string& xyz_file,
-                                const Molecule& molecule) {
+static void print_molecule_info(
+    const std::string& xyz_file,
+    const Molecule& molecule
+) {
     std::cout << "\n============================\n";
     std::cout << "Molecule : " << get_molecule_name(xyz_file) << "\n";
     std::cout << "File     : " << xyz_file << "\n";
@@ -33,7 +39,12 @@ static void print_molecule_info(const std::string& xyz_file,
 
 static int get_expected_modes(const Molecule& molecule) {
     int n = molecule.get_num_atoms();
-    return (n == 2) ? 3 * n - 5 : 3 * n - 6;
+
+    if (n == 2) {
+        return 3 * n - 5;
+    }
+
+    return 3 * n - 6;
 }
 
 static void print_usage() {
@@ -62,7 +73,10 @@ int main(int argc, char* argv[]) {
         std::string mode = argv[1];
 
         if (mode == "vibration") {
-            if (argc < 4) { print_usage(); return 1; }
+            if (argc < 4) {
+                print_usage();
+                return 1;
+            }
 
             std::string xyz_file = argv[2];
             std::string hessian_file = argv[3];
@@ -89,7 +103,10 @@ int main(int argc, char* argv[]) {
         }
 
         else if (mode == "finite-diff") {
-            if (argc != 5) { print_usage(); return 1; }
+            if (argc != 5) {
+                print_usage();
+                return 1;
+            }
 
             std::string xyz_file = argv[2];
             std::string output_hessian = argv[3];
@@ -116,7 +133,10 @@ int main(int argc, char* argv[]) {
         }
 
         else if (mode == "finite-diff-vib") {
-            if (argc < 5) { print_usage(); return 1; }
+            if (argc < 5) {
+                print_usage();
+                return 1;
+            }
 
             std::string xyz_file = argv[2];
             std::string output_hessian = argv[3];
@@ -155,7 +175,10 @@ int main(int argc, char* argv[]) {
         }
 
         else if (mode == "dipole") {
-            if (argc != 3) { print_usage(); return 1; }
+            if (argc != 3) {
+                print_usage();
+                return 1;
+            }
 
             std::string xyz_file = argv[2];
 
@@ -183,7 +206,10 @@ int main(int argc, char* argv[]) {
         }
 
         else if (mode == "dipole-scf") {
-            if (argc != 4) { print_usage(); return 1; }
+            if (argc != 4) {
+                print_usage();
+                return 1;
+            }
 
             std::string xyz_file = argv[2];
             std::string pdiag_file = argv[3];
@@ -196,7 +222,8 @@ int main(int argc, char* argv[]) {
                 Validation::read_frequencies(pdiag_file);
 
             std::cout << "Loaded " << p_diagonal.size()
-                      << " diagonal density values from: " << pdiag_file << "\n";
+                      << " diagonal density values from: "
+                      << pdiag_file << "\n";
 
             DipoleMoment dipole;
             dipole.compute(molecule, p_diagonal);
@@ -205,10 +232,14 @@ int main(int argc, char* argv[]) {
         }
 
         else if (mode == "validate") {
-            if (argc != 4) { print_usage(); return 1; }
+            if (argc != 4) {
+                print_usage();
+                return 1;
+            }
 
             std::vector<double> computed =
                 Validation::read_frequencies(argv[2]);
+
             std::vector<double> reference =
                 Validation::read_frequencies(argv[3]);
 
