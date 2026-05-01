@@ -10,7 +10,7 @@ find_package(Eigen3 REQUIRED)
 # Include project headers
 include_directories(${CMAKE_SOURCE_DIR}/include)
 
-# ── Main executable ──────────────────────────────────────────────────────────
+# Main executable
 # vibrational_frequency: vibration modes, dipole moment, validation
 add_executable(vibrational_frequency
     src/main.cpp
@@ -24,7 +24,7 @@ add_executable(vibrational_frequency
 )
 target_link_libraries(vibrational_frequency Eigen3::Eigen)
 
-# ── CNDO/2 energy oracle ─────────────────────────────────────────────────────
+# CNDO/2 energy oracle 
 # cndo_energy: standalone binary called by CNDOEngine for finite-difference Hessian
 add_executable(cndo_energy
     src/cndo_energy.cpp
