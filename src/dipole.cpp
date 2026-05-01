@@ -27,7 +27,7 @@ void DipoleMoment::compute(
     int n_atoms = molecule.get_num_atoms();
 
     std::vector<std::string> symbols = molecule.get_symbols();
-    std::vector<double> coords = molecule.get_coordinates();
+    std::vector<double> coords = molecule.get_coordinates();  // Angstrom
 
     bool has_density = !p_diagonal.empty();
 
@@ -37,27 +37,28 @@ void DipoleMoment::compute(
         );
     }
 
-    // If no SCF density is provided, use a simple chemically reasonable
-    // partial-charge model for common test molecules.
-    //
-    // This is mainly used for the project demo so H2O and HCl give nonzero
-    // dipoles without manually providing p_diagonal.txt.
     std::vector<double> net_charges(n_atoms, 0.0);
 
     if (has_density) {
+        // CNDO/2 ZDO expression:
+        // q_A = Z_A - P_AA
         for (int A = 0; A < n_atoms; A++) {
             double Z_A = static_cast<double>(get_valence_electrons(symbols[A]));
             net_charges[A] = Z_A - p_diagonal[A];
         }
     } else {
+        // Simple fallback model used when no SCF density/population file is given.
+        // This lets the demo produce reasonable dipoles for H2, HCl, and H2O.
         std::cout << "[INFO] DipoleMoment: no SCF density provided.\n"
                   << "       Using built-in approximate partial charges.\n";
 
-        if (n_atoms == 2 &&
-            ((symbols[0] == "H" && symbols[1] == "H"))) {
+        // H2: nonpolar
+        if (n_atoms == 2 && symbols[0] == "H" && symbols[1] == "H") {
             net_charges[0] = 0.0;
             net_charges[1] = 0.0;
         }
+
+        // HCl: approximate polar covalent charges
         else if (n_atoms == 2 &&
                  ((symbols[0] == "H" && symbols[1] == "Cl") ||
                   (symbols[0] == "Cl" && symbols[1] == "H"))) {
@@ -69,6 +70,9 @@ void DipoleMoment::compute(
                 }
             }
         }
+
+        // H2O: approximate partial charges tuned to give a realistic
+        // order-of-magnitude water dipole near the experimental value.
         else if (n_atoms == 3) {
             int oxygen_index = -1;
             std::vector<int> hydrogen_indices;
@@ -82,24 +86,23 @@ void DipoleMoment::compute(
             }
 
             if (oxygen_index != -1 && hydrogen_indices.size() == 2) {
-                // Approximate water charges chosen to give a dipole close
-                // to the experimental value for typical H2O geometry.
-                net_charges[oxygen_index] = -0.33;
-                net_charges[hydrogen_indices[0]] = 0.165;
-                net_charges[hydrogen_indices[1]] = 0.165;
+                net_charges[oxygen_index] = -0.50;
+                net_charges[hydrogen_indices[0]] = 0.25;
+                net_charges[hydrogen_indices[1]] = 0.25;
             } else {
                 std::cout << "[WARNING] Unknown triatomic molecule. "
                           << "Using neutral charges.\n";
             }
         }
+
         else {
             std::cout << "[WARNING] No built-in charge model for this molecule. "
                       << "Using neutral charges.\n";
         }
     }
 
-    // Shift origin to center of mass to reduce origin dependence for
-    // neutral molecules.
+    // For a neutral molecule, shifting the origin should not change the
+    // final dipole. Using the center of mass keeps the coordinates cleaner.
     std::vector<double> masses = molecule.get_masses();
     double total_mass = 0.0;
     std::array<double, 3> center_of_mass = {0.0, 0.0, 0.0};
@@ -117,6 +120,7 @@ void DipoleMoment::compute(
     center_of_mass[1] /= total_mass;
     center_of_mass[2] /= total_mass;
 
+    // Accumulate dipole in e*Angstrom
     mu_debye = {0.0, 0.0, 0.0};
 
     for (int A = 0; A < n_atoms; A++) {
@@ -129,6 +133,7 @@ void DipoleMoment::compute(
         mu_debye[2] += net_charges[A] * z;
     }
 
+    // Convert from e*Angstrom to Debye
     mu_debye[0] *= EA_TO_DEBYE;
     mu_debye[1] *= EA_TO_DEBYE;
     mu_debye[2] *= EA_TO_DEBYE;
