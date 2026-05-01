@@ -1,6 +1,4 @@
-
 #include "finite_difference.h"
-
 #include <iostream>
 
 FiniteDifference::FiniteDifference(double step) {
@@ -13,9 +11,13 @@ Hessian FiniteDifference::compute_hessian(const Molecule& molecule, CNDOEngine& 
     Hessian hessian;
     hessian.resize(size);
 
+    const double ang_to_bohr = 1.889726124565062;
+    double step_bohr = step_size * ang_to_bohr;
+
     std::cout << "Computing finite-difference Hessian\n";
     std::cout << "Coordinates: " << size << "\n";
     std::cout << "Step size: " << step_size << " Angstrom\n";
+    std::cout << "Step size: " << step_bohr << " Bohr\n";
 
     double e0 = engine.compute_energy(molecule);
 
@@ -34,9 +36,8 @@ Hessian FiniteDifference::compute_hessian(const Molecule& molecule, CNDOEngine& 
                 double e_minus = engine.compute_energy(mol_minus);
 
                 value = (e_plus - 2.0 * e0 + e_minus) /
-                        (step_size * step_size);
-            }
-            else {
+                        (step_bohr * step_bohr);
+            } else {
                 Molecule mol_pp = molecule;
                 Molecule mol_pm = molecule;
                 Molecule mol_mp = molecule;
@@ -60,7 +61,7 @@ Hessian FiniteDifference::compute_hessian(const Molecule& molecule, CNDOEngine& 
                 double e_mm = engine.compute_energy(mol_mm);
 
                 value = (e_pp - e_pm - e_mp + e_mm) /
-                        (4.0 * step_size * step_size);
+                        (4.0 * step_bohr * step_bohr);
             }
 
             hessian.set_value(i, j, value);
