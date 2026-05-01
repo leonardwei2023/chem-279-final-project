@@ -76,6 +76,7 @@ void DipoleMoment::print() const {
     std::cout << "  mu_y = " << mu_debye[1] << " Debye\n";
     std::cout << "  mu_z = " << mu_debye[2] << " Debye\n";
     std::cout << "  |mu| = " << magnitude_debye << " Debye\n";
+    
     std::cout << "------------------------------------------\n";
     std::cout << "Reference values (experimental):\n";
     std::cout << "  HCl:  1.08 Debye\n";
