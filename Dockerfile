@@ -1,24 +1,22 @@
-FROM ubuntu:22.04
-
-# Avoid prompts
+FROM ubuntu:24.04
+ 
+# Avoid interactive prompts during package install
 ENV DEBIAN_FRONTEND=noninteractive
-
-# Install dependencies
+ 
+# Install build tools and Eigen3
 RUN apt-get update && apt-get install -y \
     build-essential \
     cmake \
-    git \
     libeigen3-dev \
     && rm -rf /var/lib/apt/lists/*
-
-# Set working directory
-WORKDIR /app
-
-# Copy project files
+ 
+# Copy project into container
+WORKDIR /project
 COPY . .
-
-# Build (fixed)
-RUN cmake -S . -B build && cmake --build build
-
-# Default command
-CMD ["bash"]
+ 
+# Build
+RUN mkdir -p build && cd build && cmake .. && cmake --build .
+ 
+# Default command: show usage
+CMD ["./build/vibrational_frequency"]
+ 
