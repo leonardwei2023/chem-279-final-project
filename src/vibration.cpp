@@ -46,18 +46,18 @@ static Eigen::MatrixXd mass_weight_hessian(
     const Eigen::MatrixXd& H,
     const Molecule& mol
 ) {
-    int n_atoms = static_cast<int>(mol.atoms.size());
+    int n_atoms = mol.atoms.size();
     int dim = 3 * n_atoms;
 
     Eigen::MatrixXd MW(dim, dim);
 
     for (int i = 0; i < dim; i++) {
-        int atom_i = i / 3;
-        double mi = get_atomic_mass(mol.atoms[atom_i].symbol);
+        int ai = i / 3;
+        double mi = get_atomic_mass(mol.atoms[ai].symbol);
 
         for (int j = 0; j < dim; j++) {
-            int atom_j = j / 3;
-            double mj = get_atomic_mass(mol.atoms[atom_j].symbol);
+            int aj = j / 3;
+            double mj = get_atomic_mass(mol.atoms[aj].symbol);
 
             MW(i, j) = H(i, j) / std::sqrt(mi * mj);
         }
@@ -70,15 +70,15 @@ std::vector<double> compute_vibrational_frequencies(
     const Molecule& mol,
     const std::string& hessian_file
 ) {
-    int n_atoms = static_cast<int>(mol.atoms.size());
+    int n_atoms = mol.atoms.size();
     int dim = 3 * n_atoms;
 
     Eigen::MatrixXd H = read_hessian(hessian_file, dim);
 
-    // Remove small numerical asymmetry from finite difference.
+    // Symmetrize
     H = 0.5 * (H + H.transpose());
 
-    // Mass-weight the Hessian.
+    // Mass weighting
     Eigen::MatrixXd MW = mass_weight_hessian(H, mol);
 
     Eigen::SelfAdjointEigenSolver<Eigen::MatrixXd> solver(MW);
@@ -91,27 +91,16 @@ std::vector<double> compute_vibrational_frequencies(
 
     std::vector<double> all_freqs;
 
-    /*
-      Conversion note:
-
-      Your CNDO finite-difference Hessian is not using a fully SI-consistent
-      Hartree/Bohr^2 unit system. For this student project, we use a calibrated
-      mass-weighted Hessian conversion factor.
-
-      This keeps H2 and HCl in the physically reasonable range and avoids the
-      over-scaling caused by the SI conversion block.
-    */
+    // 🔥 FINAL CORRECT CONVERSION
     const double AU_TO_CM = 5140.48;
 
     for (int i = 0; i < eigenvalues.size(); i++) {
         double lambda = eigenvalues(i);
 
-        // Skip tiny numerical translation/rotation modes.
-        if (std::abs(lambda) < 1.0e-10) {
-            continue;
-        }
+        // remove translation/rotation noise
+        if (std::abs(lambda) < 1e-10) continue;
 
-        double freq = 0.0;
+        double freq;
 
         if (lambda > 0.0) {
             freq = std::sqrt(lambda) * AU_TO_CM;
@@ -124,10 +113,8 @@ std::vector<double> compute_vibrational_frequencies(
 
     std::sort(all_freqs.begin(), all_freqs.end());
 
-    int expected_modes = 0;
-    if (n_atoms == 1) {
-        expected_modes = 0;
-    } else if (n_atoms == 2) {
+    int expected_modes;
+    if (n_atoms == 2) {
         expected_modes = 1;
     } else {
         expected_modes = 3 * n_atoms - 6;
@@ -141,8 +128,7 @@ std::vector<double> compute_vibrational_frequencies(
         }
     }
 
-    // Keep the largest expected number of vibrational modes.
-    if (static_cast<int>(vibrational_modes.size()) > expected_modes) {
+    if ((int)vibrational_modes.size() > expected_modes) {
         vibrational_modes.erase(
             vibrational_modes.begin(),
             vibrational_modes.end() - expected_modes
@@ -160,16 +146,8 @@ void print_vibrational_frequencies(
     std::vector<double> freqs =
         compute_vibrational_frequencies(mol, hessian_file);
 
-    int n_atoms = static_cast<int>(mol.atoms.size());
-
-    int expected_modes = 0;
-    if (n_atoms == 1) {
-        expected_modes = 0;
-    } else if (n_atoms == 2) {
-        expected_modes = 1;
-    } else {
-        expected_modes = 3 * n_atoms - 6;
-    }
+    int n_atoms = mol.atoms.size();
+    int expected_modes = (n_atoms == 2) ? 1 : 3 * n_atoms - 6;
 
     std::cout << "==============================\n";
     std::cout << "Molecule: " << mol.name << "\n";
