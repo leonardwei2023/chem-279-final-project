@@ -1,4 +1,3 @@
-std::cout << "NEW ENERGY MODEL RUNNING\n";
 #include "cndo_engine.h"
 #include "finite_difference.h"
 #include "hessian.h"
@@ -18,8 +17,7 @@ std::string get_molecule_name(const std::string& filepath) {
 
     if (slash_pos == std::string::npos) {
         filename = filepath;
-    }
-    else {
+    } else {
         filename = filepath.substr(slash_pos + 1);
     }
 
