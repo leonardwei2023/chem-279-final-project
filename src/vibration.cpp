@@ -15,10 +15,12 @@
 
 static constexpr double AMU_TO_AU = 1822.888486;
 
-// Converts sqrt(eigenvalue in atomic units) to cm^-1.
+// Converts sqrt(eigenvalue in atomic units) to cm^-1:
+
 static constexpr double AU_TO_CM = 5140.48;
 
-// Small frequencies are treated as translation/rotation modes.
+// Small frequencies are treated as translation/rotation modes:
+
 static constexpr double FREQ_ZERO_THRESHOLD = 10.0;
 
 bool Vibrations::is_linear_molecule(const Molecule& molecule) const {
@@ -40,7 +42,8 @@ void Vibrations::compute(const Molecule& molecule, const Hessian& hessian) {
 
     std::vector<double> masses = molecule.get_masses();  // amu
 
-    // Load Hessian into Eigen matrix
+    // Load Hessian into Eigen matrix:
+    
     Eigen::MatrixXd H(dim, dim);
     for (int i = 0; i < dim; i++) {
         for (int j = 0; j < dim; j++) {
@@ -48,10 +51,12 @@ void Vibrations::compute(const Molecule& molecule, const Hessian& hessian) {
         }
     }
 
-    // Make sure Hessian is symmetric
+    // Make sure Hessian is symmetric:
+    
     H = 0.5 * (H + H.transpose());
 
-    // Mass-weight Hessian using atomic-unit masses
+    // Mass-weight Hessian using atomic-unit masses:
+    
     Eigen::MatrixXd MW(dim, dim);
     for (int i = 0; i < dim; i++) {
         double mi = masses[i / 3] * AMU_TO_AU;
@@ -106,7 +111,8 @@ void Vibrations::compute(const Molecule& molecule, const Hessian& hessian) {
         }
     }
 
-    // If there are extra modes, remove the lowest-frequency ones.
+    // If there are extra modes, remove the lowest-frequency ones:
+    
     if (static_cast<int>(real_modes.size()) > expected_modes) {
         int extra = static_cast<int>(real_modes.size()) - expected_modes;
         real_modes.erase(real_modes.begin(), real_modes.begin() + extra);
@@ -122,15 +128,15 @@ void Vibrations::compute(const Molecule& molecule, const Hessian& hessian) {
 }
 
 void Vibrations::print_frequencies() const {
-    std::cout << "\n--- Vibrational Frequencies ---\n";
+    std::cout << "\n Vibrational Frequencies \n";
 
     for (size_t i = 0; i < frequencies.size(); i++) {
         std::cout << "  Mode " << i + 1
                   << ": " << frequencies[i] << " cm^-1\n";
     }
 
-    std::cout << "-------------------------------\n";
-    std::cout << "Reference values (Psi4/experimental):\n";
+    std::cout << "----------------------------------------------\n";
+    std::cout << "Reference values (Psi4/experimental value):\n";
     std::cout << "  H2:  ~4400 cm^-1  (stretch)\n";
     std::cout << "  HCl: ~2990 cm^-1  (stretch)\n";
     std::cout << "  H2O: ~1595, ~3657, ~3756 cm^-1\n";
