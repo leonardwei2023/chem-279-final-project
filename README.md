@@ -1,9 +1,16 @@
-# CNDO/2 Vibrational Frequencies and Dipole Moments
+# CNDO/2 Vibrational Frequencies and Dipole Moments - CHEM 279
 
-**CHEM 279 — Numerical Algorithms Applied to Computational Quantum Chemistry**
+**Numerical Algorithms Applied to Computational Quantum Chemistry**
+
 **Final Project — Spring 2026**
 
-David Houshangi · Leonard Ming Wei
+## Authors:
+
+David Houshangi
+
+Leonard Ming Wei
+
+
 University of California, Berkeley
 
 ---
@@ -14,8 +21,6 @@ This project implements a **CNDO/2 semi-empirical quantum chemistry model** to c
 
 1. **Vibrational frequencies** via a finite-difference Hessian
 2. **Molecular dipole moments** from the **SCF density matrix**
-
-All computations follow Lectures 13–17 of CHEM 279.
 
 ---
 
@@ -28,6 +33,7 @@ CNDO/2 applies the **Zero Differential Overlap (ZDO)** approximation and treats 
 The Fock matrix:
 
 Diagonal:
+
 Fμμ = −½(Iμ + Aμ) + [PAA − ZA − (Pμμ^α − ½)] γAA + ΣB≠A (PBB − ZB) γAB
 
 Off-diagonal:
@@ -152,11 +158,9 @@ Dipole Moment (CNDO/2 SCF Density)
 * CNDO/2 is a **semi-empirical model**, so deviations from experiment are expected
 * No artificial charge fitting is used
 * Dipole is computed **directly from SCF density matrix**
-* Fully consistent with lecture formulation
 
 ---
 
-## Authors
 
 David Houshangi
 Leonard Ming Wei
