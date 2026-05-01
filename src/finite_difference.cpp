@@ -81,7 +81,7 @@ Hessian FiniteDifference::compute_hessian(
             hessian.set_value(j, i, value);
         }
 
-        std::cout << "Finished Hessian row "
+        std::cout << "Finished Hessian row: "
                   << i + 1 << " of " << size << "\n";
     }
 
