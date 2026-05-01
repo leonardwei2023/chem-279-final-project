@@ -1,3 +1,4 @@
+std::cout << "NEW ENERGY MODEL RUNNING\n";
 #include "cndo_engine.h"
 #include "finite_difference.h"
 #include "hessian.h"
