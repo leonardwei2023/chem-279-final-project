@@ -8,7 +8,6 @@
 #include <stdexcept>
 #include <vector>
 
-// -----------------------------------------------------------------------
 // Unit conversion: Hessian (Hartree/Bohr^2 / amu) -> frequency (cm^-1)
 //
 // From the proposal and Lecture 15:
@@ -28,11 +27,15 @@
 // to convert from Hartree/Ang^2 to Hartree/Bohr^2.  After mass-weighting
 // by amu, each eigenvalue lambda is in Hartree/(Bohr^2*amu), so
 // AU_TO_CM = 5140.48 is the correct constant.
-// -----------------------------------------------------------------------
+
+
+
 static constexpr double AU_TO_CM = 5140.48;
 
 // Modes below this threshold (cm^-1) are treated as zero modes
 // (translations + rotations) and discarded.
+
+
 static constexpr double FREQ_ZERO_THRESHOLD = 10.0;
 
 bool Vibrations::is_linear_molecule(const Molecule& molecule) const {
@@ -57,11 +60,11 @@ void Vibrations::compute(const Molecule& molecule, const Hessian& hessian) {
 
     std::vector<double> masses = molecule.get_masses();  // amu
 
-    // ------------------------------------------------------------------
+    
     // Step 1: Load Hessian into Eigen and symmetrize
     // Finite differences can produce small asymmetries; symmetrizing
     // ensures SelfAdjointEigenSolver receives an exactly symmetric matrix.
-    // ------------------------------------------------------------------
+    
     Eigen::MatrixXd H(dim, dim);
     for (int i = 0; i < dim; i++) {
         for (int j = 0; j < dim; j++) {
@@ -70,11 +73,11 @@ void Vibrations::compute(const Molecule& molecule, const Hessian& hessian) {
     }
     H = 0.5 * (H + H.transpose());
 
-    // ------------------------------------------------------------------
+    
     // Step 2: Mass-weight the Hessian
     //   H'_{ij} = H_{ij} / sqrt(m_i * m_j)
     // (Proposal section b-iii; Lecture 15 vibrations slide)
-    // ------------------------------------------------------------------
+    
     Eigen::MatrixXd MW(dim, dim);
     for (int i = 0; i < dim; i++) {
         double mi = masses[i / 3];
@@ -84,10 +87,10 @@ void Vibrations::compute(const Molecule& molecule, const Hessian& hessian) {
         }
     }
 
-    // ------------------------------------------------------------------
+    
     // Step 3: Diagonalize H' q = lambda q
     // SelfAdjointEigenSolver returns eigenvalues in ascending order.
-    // ------------------------------------------------------------------
+    
     Eigen::SelfAdjointEigenSolver<Eigen::MatrixXd> solver(MW);
     if (solver.info() != Eigen::Success) {
         throw std::runtime_error(
@@ -98,15 +101,16 @@ void Vibrations::compute(const Molecule& molecule, const Hessian& hessian) {
     Eigen::VectorXd eigenvalues = solver.eigenvalues();
     Eigen::MatrixXd eigenvecs   = solver.eigenvectors();
 
-    // ------------------------------------------------------------------
+    
     // Step 4: Convert eigenvalues to frequencies (cm^-1)
     //   nu_i = sqrt(lambda_i) * AU_TO_CM   for lambda > 0 (real mode)
     //   nu_i = -sqrt(|lambda_i|) * AU_TO_CM for lambda < 0 (imaginary)
     // (Proposal section b-iv)
-    // ------------------------------------------------------------------
+    
     struct Mode {
         double freq_cm;
         Eigen::VectorXd vec;
+        Mode(double f, const Eigen::VectorXd& v) : freq_cm(f), vec(v) {}
     };
     std::vector<Mode> all_modes;
 
@@ -124,11 +128,11 @@ void Vibrations::compute(const Molecule& molecule, const Hessian& hessian) {
                   return a.freq_cm < b.freq_cm;
               });
 
-    // ------------------------------------------------------------------
+    
     // Step 5: Remove near-zero modes (translations + rotations)
     //   Linear molecule:    5 zero modes  -> 3N-5 vibrational modes
     //   Nonlinear molecule: 6 zero modes  -> 3N-6 vibrational modes
-    // ------------------------------------------------------------------
+    
     int expected_modes = is_linear_molecule(molecule)
                          ? 3 * n_atoms - 5
                          : 3 * n_atoms - 6;
@@ -188,11 +192,11 @@ std::vector<double> Vibrations::get_frequencies() const {
     return frequencies;
 }
 
-// -----------------------------------------------------------------------
 // Write normal mode animation as a multi-frame .xyz file.
 // Atoms are displaced along the normal mode eigenvector as a sine wave.
 // Open the output in Avogadro or VMD for visualization.
-// -----------------------------------------------------------------------
+
+
 void Vibrations::write_normal_mode_xyz(
     const Molecule& molecule,
     const std::string& filename,
