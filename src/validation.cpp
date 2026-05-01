@@ -40,7 +40,7 @@ void Validation::compare(
     }
 
     std::cout << "\nValidation against Psi4/reference frequencies:\n";
-    std::cout << "------------------------------------------------------------\n";
+    std::cout << "--------------------------------------------------------------------------\n";
 
     size_t n = std::min(computed.size(), reference.size());
 
@@ -67,7 +67,7 @@ void Validation::compare(
                   << "%\n";
     }
 
-    std::cout << "------------------------------------------------------------\n";
+    std::cout << "--------------------------------------------------------------------------\n";
     std::cout << "Number of compared modes: " << n << "\n";
     std::cout << "Mean absolute error: "
               << total_abs_error / static_cast<double>(n)
