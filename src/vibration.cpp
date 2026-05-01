@@ -17,7 +17,7 @@ static constexpr double AMU_TO_AU = 1822.888486;
 
 // Converts sqrt(eigenvalue in atomic units) to cm^-1:
 
-static constexpr double AU_TO_CM = 5140.48;
+static constexpr double AU_TO_CM = 219474.63137; 
 
 // Small frequencies are treated as translation/rotation modes:
 
