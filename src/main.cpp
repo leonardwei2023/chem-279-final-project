@@ -30,11 +30,11 @@ static void print_molecule_info(
     const std::string& xyz_file,
     const Molecule& molecule
 ) {
-    std::cout << "\n============================\n";
+    std::cout << "\n================================================================\n";
     std::cout << "Molecule : " << get_molecule_name(xyz_file) << "\n";
     std::cout << "File     : " << xyz_file << "\n";
     std::cout << "Atoms    : " << molecule.get_num_atoms() << "\n";
-    std::cout << "============================\n";
+    std::cout << "==================================================================\n";
 }
 
 static int get_expected_modes(const Molecule& molecule) {
@@ -48,6 +48,7 @@ static int get_expected_modes(const Molecule& molecule) {
 }
 
 static void print_usage() {
+    
     std::cout << "\nUsage:\n"
               << "  ./vibrational_frequency vibration        <xyz> <hessian_dat> [--animate]\n"
               << "  ./vibrational_frequency finite-diff      <xyz> <out_hessian> <step>\n"
@@ -62,6 +63,7 @@ static void print_usage() {
               << "Options:\n"
               << "  --animate   also write normal_modes.xyz for Avogadro/VMD visualization\n";
 }
+
 
 int main(int argc, char* argv[]) {
     try {
