@@ -128,7 +128,7 @@ void Vibrations::compute(const Molecule& molecule, const Hessian& hessian) {
 }
 
 void Vibrations::print_frequencies() const {
-    std::cout << "\n Vibrational Frequencies \n";
+    std::cout << "\n Vibrational Frequencies: \n";
 
     for (size_t i = 0; i < frequencies.size(); i++) {
         std::cout << "  Mode " << i + 1
