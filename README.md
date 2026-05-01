@@ -49,7 +49,7 @@ where `P^α = P^total / 2` for closed-shell molecules.
 γ_AB = 1 / (R_AB + 2 / (γ_AA + γ_BB))        (two-center)
 ```
 
-### Overlap Integrals (Lectures 7–8, 10)
+### Overlap Integrals (Lectures 7, 8, 10)
 
 Computed analytically using STO-3G contracted Gaussian basis functions (Hehre, Stewart & Pople 1969).
 
@@ -64,7 +64,7 @@ Off-diagonal: H_ij = [E(++)-E(+-)-E(-+)+E(--)] / (4h²)
 
 Raw values in Hartree/Å² are converted to Hartree/Bohr² by dividing by `(1.8897)²`.
 
-### Vibrational Frequencies (Lecture 15, Proposal)
+### Vibrational Frequencies (Lecture 15)
 
 1. Mass-weight the Hessian: `H'_ij = H_ij / √(m_i · m_j)`
 2. Diagonalize: `H' q = λ q`
