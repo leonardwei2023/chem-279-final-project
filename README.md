@@ -1,7 +1,11 @@
 # Calculation of Molecular Dipole Moments and Basic Vibrational Frequencies using CNDO/2
 
 **CHEM 279 — Final Project**  
-David Houshangi · Leonard Ming Wei  
+
+David Houshangi
+
+Leonard Ming Wei  
+
 UC Berkeley  
 
 ---
