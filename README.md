@@ -1,4 +1,5 @@
-# CNDO/2 Vibrational Frequencies and Dipole Moments
+# Calculation of Molecular Dipole Moments and Basic Vibrational Frequencies using CNDO/2. 
+
 
 **CHEM 279 — Final Project**
 
