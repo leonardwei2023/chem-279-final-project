@@ -395,7 +395,6 @@ double cndo2_total_energy(const Molecule& mol) {
         }
 
         Eigen::MatrixXd P_alpha = 0.5 * P_tot;
-
         Eigen::MatrixXd F(n_orb, n_orb);
 
         for (int mu = 0; mu < n_orb; mu++) {
@@ -446,7 +445,6 @@ double cndo2_total_energy(const Molecule& mol) {
         }
 
         Eigen::MatrixXd C = solver.eigenvectors();
-
         Eigen::MatrixXd C_occ = C.leftCols(n_occ);
         Eigen::MatrixXd P_tot_new = 2.0 * C_occ * C_occ.transpose();
 
