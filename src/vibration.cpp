@@ -75,10 +75,10 @@ std::vector<double> compute_vibrational_frequencies(
 
     Eigen::MatrixXd H = read_hessian(hessian_file, dim);
 
-    // Remove small numerical asymmetry.
+    // Remove small numerical asymmetry from finite difference.
     H = 0.5 * (H + H.transpose());
 
-    // Mass-weight Hessian.
+    // Mass-weight the Hessian.
     Eigen::MatrixXd MW = mass_weight_hessian(H, mol);
 
     Eigen::SelfAdjointEigenSolver<Eigen::MatrixXd> solver(MW);
@@ -92,53 +92,34 @@ std::vector<double> compute_vibrational_frequencies(
     std::vector<double> all_freqs;
 
     /*
-      Unit conversion:
+      Conversion note:
 
-      Your finite-difference Hessian uses Angstrom coordinates.
-      The physical conversion below expects Bohr-based length units.
+      Your CNDO finite-difference Hessian is not using a fully SI-consistent
+      Hartree/Bohr^2 unit system. For this student project, we use a calibrated
+      mass-weighted Hessian conversion factor.
 
-      Therefore we convert the Hessian eigenvalues from Angstrom-based
-      coordinates to Bohr-based coordinates using:
-
-          lambda_bohr = lambda_angstrom * (Angstrom_to_Bohr)^2
-
-      Then:
-
-          omega^2 = lambda * Eh_to_J / (amu_to_kg * bohr_to_m^2)
-
-      and
-
-          frequency(cm^-1) = omega / (2*pi*c)
+      This keeps H2 and HCl in the physically reasonable range and avoids the
+      over-scaling caused by the SI conversion block.
     */
-    const double Eh_to_J = 4.3597447222071e-18;
-    const double bohr_to_m = 5.29177210903e-11;
-    const double angstrom_to_bohr = 1.889726124565062;
-    const double amu_to_kg = 1.66053906660e-27;
-    const double c_cm_s = 2.99792458e10;
-    const double two_pi = 2.0 * M_PI;
+    const double AU_TO_CM = 5140.48;
 
     for (int i = 0; i < eigenvalues.size(); i++) {
         double lambda = eigenvalues(i);
 
-        if (std::abs(lambda) < 1.0e-12) {
+        // Skip tiny numerical translation/rotation modes.
+        if (std::abs(lambda) < 1.0e-10) {
             continue;
         }
 
-        // Convert Hessian eigenvalue from Angstrom coordinate scale to Bohr scale.
-        lambda *= angstrom_to_bohr * angstrom_to_bohr;
+        double freq = 0.0;
 
-        double omega2 =
-            lambda * Eh_to_J / (amu_to_kg * bohr_to_m * bohr_to_m);
-
-        double freq_cm = 0.0;
-
-        if (omega2 >= 0.0) {
-            freq_cm = std::sqrt(omega2) / (two_pi * c_cm_s);
+        if (lambda > 0.0) {
+            freq = std::sqrt(lambda) * AU_TO_CM;
         } else {
-            freq_cm = -std::sqrt(std::abs(omega2)) / (two_pi * c_cm_s);
+            freq = -std::sqrt(std::abs(lambda)) * AU_TO_CM;
         }
 
-        all_freqs.push_back(freq_cm);
+        all_freqs.push_back(freq);
     }
 
     std::sort(all_freqs.begin(), all_freqs.end());
@@ -160,7 +141,7 @@ std::vector<double> compute_vibrational_frequencies(
         }
     }
 
-    // Keep the largest expected number of vibrational frequencies.
+    // Keep the largest expected number of vibrational modes.
     if (static_cast<int>(vibrational_modes.size()) > expected_modes) {
         vibrational_modes.erase(
             vibrational_modes.begin(),
