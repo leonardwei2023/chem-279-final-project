@@ -241,6 +241,30 @@ Main CCCBDB Database
 - Experimental Geometry Data:
 - https://cccbdb.nist.gov/expgeom2x.asp?casno=7664417&charge=0&utm
 
+5. Methanol (CH₃OH)
+- Experimental Data:
+- https://cccbdb.nist.gov/exp2x.asp?casno=67561&charge=0&utm
+- Experimental Geometry:
+- https://cccbdb.nist.gov/expgeom2x.asp?casno=67561&charge=0&utm
+- NIST WebBook:
+- https://webbook.nist.gov/cgi/cbook.cgi?ID=C67561&Mask=1000&utm
+
+6. Formaldehyde (CH₂O)
+- Experimental Data:
+- https://cccbdb.nist.gov/exp2x.asp?casno=50000&charge=0&utm
+- Experimental Geometry:
+- https://cccbdb.nist.gov/expgeom2x.asp?casno=50000&charge=0&utm
+- NIST WebBook:
+- https://webbook.nist.gov/cgi/cbook.cgi?ID=C50000&Mask=1000&utm
+
+7. Acetaldehyde (CH₃CHO)
+- Experimental Data:
+- https://cccbdb.nist.gov/exp2x.asp?casno=75070&charge=0&utm
+- Experimental Geometry:
+- https://cccbdb.nist.gov/expgeom2x.asp?casno=75070&charge=0&utm
+- NIST WebBook:
+- https://webbook.nist.gov/cgi/cbook.cgi?ID=C75070&Mask=1000&utm
+
 ## Dipole Moment Validation
 
 NIST Experimental Dipole Moment Database
