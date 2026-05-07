@@ -18,7 +18,7 @@ static constexpr double AMU_TO_AU = 1822.888486;
 // Conversion factor used to convert sqrt(eigenvalue) to cm^-1.
 // This value is appropriate for the mass-weighted Hessian workflow used here.
 
-static constexpr double AU_TO_CM = 5140.48;
+static constexpr double AU_TO_CM = 109737.315685;
 
 // Very small frequencies are treated as translation/rotation modes.
 
