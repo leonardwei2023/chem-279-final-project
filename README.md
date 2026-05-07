@@ -267,10 +267,21 @@ Main CCCBDB Database
 
 ## Dipole Moment Validation
 
-NIST Experimental Dipole Moment Database
+## Dipole Moment Validation
 
-Experimental Dipole Moments:
-- https://cccbdb.nist.gov/diplistx.asp?utm
+Experimental dipole moment reference values used in this project were obtained from the NIST Computational Chemistry Comparison and Benchmark Database (CCCBDB).
+
+NIST Experimental Dipole Moment Database:
+https://cccbdb.nist.gov/diplistx.asp
+
+Validated molecules in this project include:
+- H2
+- HCl
+- H2O
+- NH3
+- Methanol
+- Formaldehyde
+- Acetaldehyde
 
 
 Experimental vibrational frequencies, dipole moments, and molecular geometries used for validation in this project were obtained from the National Institute of Standards and Technology (NIST) Computational Chemistry Comparison and Benchmark Database (CCCBDB).
