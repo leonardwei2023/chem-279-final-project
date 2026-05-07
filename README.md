@@ -1,6 +1,6 @@
 # Qualitative Prediction of Vibrational Frequencies and Dipole Moments in Drug-Relevant Molecular Fragments Using CNDO/2 
 
-> How Functional Groups Influence Polarity and Vibrational Signatures in pharmaceutically relevant molecular fragments
+> How Functional Groups Influence Polarity and Vibrational Signatures in Pharmaceutically Relevant Molecular Fragments.
 - Authors: David Houshangi, Leonard Ming Wei
 - CHEM 279 – Numerical Algorithms in Computational Quantum Chemistry 
 - Methods: CNDO/2, SCF, Finite-Difference Hessian, Vibrational Analysis, Dipole Moments
@@ -144,7 +144,17 @@ cmake ..
 cmake --build .
 ```
 
+## Running the Program
+
+All calculations are executed from the build directory.
+
+Example:
+
+```bash
+cd build
+./vibrational_frequency dipole ../input/h2o.xyz
 # Vibrational Frequency Calculations
+```
 
 ## Generate Hessian Matrices
 
@@ -260,18 +270,22 @@ The `input/` directory contains molecular geometry files in XYZ format used for 
 These molecules were selected to represent chemically and pharmaceutically relevant functional groups used for qualitative comparison of vibrational and polarity trends.
 
 ## Final CNDO/2 Results Table
-| Molecule | Property                      | CNDO/2 Result | Experimental / Reference Value | Interpretation                        |
-| -------- | ----------------------------- | ------------: | -----------------------------: | ------------------------------------- |
-| H₂       | Stretch Vibrational Frequency |     4452 cm⁻¹ |                     ~4400 cm⁻¹ | Excellent agreement                   |
-| HCl      | Stretch Vibrational Frequency |     2731 cm⁻¹ |                     ~2991 cm⁻¹ | Reasonable qualitative agreement            |
-| H₂O      | Vibrational Mode 1            |     4284 cm⁻¹ |                     ~1595 cm⁻¹ | Overestimated bending mode            |
-| H₂O      | Vibrational Mode 2            |     4869 cm⁻¹ |                     ~3657 cm⁻¹ | Overestimated O–H stretch             |
-| H₂O      | Vibrational Mode 3            |     4885 cm⁻¹ |                     ~3756 cm⁻¹ | Overestimated O–H stretch             |
-| H₂       | Dipole Moment                 |        0.00 D |                         0.00 D | Correctly predicts nonpolar molecule  |
-| HCl      | Dipole Moment                 |        0.24 D |                         1.08 D | Correct polarity trend                |
-| H₂O      | Dipole Moment                 |        0.45 D |                         1.85 D | Polar molecule captured qualitatively |
-| NH₃      | Dipole Moment                 |        0.54 D |                         1.47 D | Correctly predicts molecular polarity |
-| Methanol | Dipole Moment                 |        4.20 D |                        ~1.70 D | Strongly polar behavior captured      |
+## Final CNDO/2 Results Table
+
+| Molecule | Property | CNDO/2 Result | Experimental / Reference Value | Interpretation |
+|---|---|---:|---:|---|
+| H₂ | Stretch Vibrational Frequency | 4452 cm⁻¹ | ~4400 cm⁻¹ | Excellent agreement with experimental stretching frequency |
+| HCl | Stretch Vibrational Frequency | 2731 cm⁻¹ | ~2991 cm⁻¹ | Reasonable qualitative agreement for polar diatomic system |
+| H₂O | Vibrational Mode 1 | 4284 cm⁻¹ | ~1595 cm⁻¹ | Bending mode overestimated by semiempirical approximation |
+| H₂O | Vibrational Mode 2 | 4869 cm⁻¹ | ~3657 cm⁻¹ | O–H stretching mode reproduced qualitatively |
+| H₂O | Vibrational Mode 3 | 4885 cm⁻¹ | ~3756 cm⁻¹ | High-frequency O–H stretching behavior captured |
+| H₂ | Dipole Moment | 0.00 D | 0.00 D | Correctly predicts nonpolar molecular behavior |
+| HCl | Dipole Moment | 0.24 D | 1.08 D | Correctly captures molecular polarity trend |
+| H₂O | Dipole Moment | 0.45 D | 1.85 D | Polar molecular character reproduced qualitatively |
+| NH₃ | Dipole Moment | 0.54 D | 1.47 D | Correctly predicts polarity of amine-containing system |
+| Methanol | Dipole Moment | 4.20 D | ~1.70 D | Strong polarity associated with alcohol functional group captured |
+
+The CNDO/2 implementation successfully reproduced qualitative molecular trends in both vibrational frequencies and dipole moments. Small diatomic systems such as H₂ showed strong agreement with experimental vibrational frequencies, validating the finite-difference Hessian and mass-weighted vibrational workflow. More complex molecules such as H₂O, NH₃, and methanol exhibited larger deviations from experiment, which is expected for a simplified semiempirical model without geometry optimization or anharmonic corrections. Despite these quantitative limitations, the method correctly captured relative polarity trends and characteristic high-frequency stretching modes, demonstrating that CNDO/2 can provide useful qualitative insight into molecular behavior and pharmaceutically relevant functional-group properties.
 
 The CNDO/2 implementation successfully reproduced qualitative molecular trends in both vibrational frequencies and dipole moments. Small diatomic systems such as H₂ showed strong agreement with experimental vibrational frequencies, validating the finite-difference Hessian and mass-weighted vibrational workflow. More complex molecules such as H₂O, NH₃, and methanol exhibited larger deviations from experiment, which is expected for a simplified semiempirical model without geometry optimization or anharmonic corrections. Despite these quantitative limitations, the method correctly captured relative polarity trends and characteristic high-frequency stretching modes, demonstrating that CNDO/2 can provide useful qualitative insight into molecular behavior and functional-group properties relevant to pharmaceutical chemistry.
 
