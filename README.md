@@ -199,8 +199,8 @@ These molecules were selected to represent chemically and pharmaceutically relev
 | NH₃      | Dipole Moment                 |        0.54 D |                         1.47 D | Correctly predicts molecular polarity |
 | Methanol | Dipole Moment                 |        4.20 D |                        ~1.70 D | Strongly polar behavior captured      |
 
-```The CNDO/2 implementation successfully reproduced qualitative molecular trends in both vibrational frequencies and dipole moments. Small diatomic systems such as H₂ showed strong agreement with experimental vibrational frequencies, validating the finite-difference Hessian and mass-weighted vibrational workflow. More complex molecules such as H₂O, NH₃, and methanol exhibited larger deviations from experiment, which is expected for a simplified semiempirical model without geometry optimization or anharmonic corrections. Despite these quantitative limitations, the method correctly captured relative polarity trends and characteristic high-frequency stretching modes, demonstrating that CNDO/2 can provide useful qualitative insight into molecular behavior and functional-group properties relevant to pharmaceutical chemistry.
-```
+The CNDO/2 implementation successfully reproduced qualitative molecular trends in both vibrational frequencies and dipole moments. Small diatomic systems such as H₂ showed strong agreement with experimental vibrational frequencies, validating the finite-difference Hessian and mass-weighted vibrational workflow. More complex molecules such as H₂O, NH₃, and methanol exhibited larger deviations from experiment, which is expected for a simplified semiempirical model without geometry optimization or anharmonic corrections. Despite these quantitative limitations, the method correctly captured relative polarity trends and characteristic high-frequency stretching modes, demonstrating that CNDO/2 can provide useful qualitative insight into molecular behavior and functional-group properties relevant to pharmaceutical chemistry.
+
 
 ## Functional Group Trends
 
