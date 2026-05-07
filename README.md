@@ -93,12 +93,14 @@ The final dipole moment is reported in: Debye
 ```text
 chem-279-final-project/
 │
-├── include/          # Header files
-├── src/              # Source files
-├── input/            # Molecular geometry files (.xyz)
-├── scripts/          # Validation with Experimental Reference Data
-├── visualization/    # Visualization and plotting tools
-├── output/           # Generated results
+├── include/              # Header files
+├── src/                  # Source files
+├── input/                # Molecular geometry files (.xyz)
+├── scripts/              # Validation and helper scripts
+├── visualization/        # Visualization and plotting tools
+├── output/               # Generated Hessians, frequencies, and outputs
+├── report/               # Final report PDF and supporting files
+├── slides/               # Presentation slides
 │
 ├── CMakeLists.txt
 ├── Dockerfile
