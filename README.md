@@ -39,14 +39,13 @@ Small molecular systems representing common functional groups were analyzed, inc
 
 The project focuses on understanding how functional groups influence molecular polarity, infrared-active vibrational modes, and spectroscopic behavior using an efficient semiempirical quantum chemistry framework.
 
-## Recommended Demonstration Systems
 
-Recommended molecules for vibrational frequency calculations:
+## molecules for vibrational frequency calculations:
 - H2
 - HCl
 - H2O
 
-Recommended molecules for dipole moment calculations:
+## molecules for dipole moment calculations:
 - H2
 - HCl
 - H2O
