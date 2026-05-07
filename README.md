@@ -8,7 +8,14 @@ The project includes:
 - Finite-difference Hessian generation
 - Vibrational frequency calculations
 - Dipole moment calculations from SCF electron populations
-- Validation against Psi4 reference calculations
+- Validation with Experimental Reference Data
+
+Computed vibrational frequencies and dipole moments were compared against experimental reference values obtained from:
+
+- NIST Chemistry WebBook
+- NIST CCCBDB Database
+
+The project focuses on reproducing qualitative molecular trends rather than exact quantitative agreement.
 - Visualization of molecular vibrations and normal modes
 
 The primary goal of this project is to evaluate whether CNDO/2 can reproduce qualitative trends in molecular polarity and vibrational behavior across chemically relevant functional groups.
@@ -89,7 +96,7 @@ chem-279-final-project/
 ├── include/          # Header files
 ├── src/              # Source files
 ├── input/            # Molecular geometry files (.xyz)
-├── scripts/          # Psi4 validation scripts
+├── scripts/          # Validation with Experimental Reference Data
 ├── visualization/    # Visualization and plotting tools
 ├── output/           # Generated results
 │
