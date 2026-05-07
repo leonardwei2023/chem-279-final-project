@@ -1,4 +1,11 @@
-# Overview
+# Qualitative Prediction of Vibrational Frequencies and Dipole Moments in Drug-Relevant Molecular Fragments Using CNDO/2 
+
+> How Functional Groups Influence Polarity and Vibrational Signatures in Drug-Like Molecules
+- Authors: David Houshangi, Leonard Ming Wei
+- CHEM 279 – Numerical Algorithms in Computational Quantum Chemistry 
+- Methods: CNDO/2, SCF, Finite-Difference Hessian, Vibrational Analysis, Dipole Moments
+
+## Project Overview
 
 This project implements a modular computational quantum chemistry workflow using the CNDO/2 semiempirical method to study vibrational frequencies and dipole moments in small molecular systems relevant to common pharmaceutical functional groups.
 
@@ -326,12 +333,7 @@ Possible future extensions include:
 - automated visualization pipelines
 - expanded pharmaceutical functional-group analysis
 
-## Authors
 
-- David Houshangi
-- Leonard Ming Wei
-
-CHEM 279 — Numerical Algorithms in Computational Quantum Chemistry
 
 University of California, Berkeley
 
