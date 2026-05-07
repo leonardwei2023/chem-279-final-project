@@ -30,11 +30,11 @@ static void print_molecule_info(
     const std::string& xyz_file,
     const Molecule& molecule
 ) {
-    std::cout << "\n================================================================\n";
+    std::cout << "\n=============================================\n";
     std::cout << "Molecule : " << get_molecule_name(xyz_file) << "\n";
     std::cout << "File     : " << xyz_file << "\n";
     std::cout << "Atoms    : " << molecule.get_num_atoms() << "\n";
-    std::cout << "==================================================================\n";
+    std::cout << "=============================================\n";
 }
 
 static int get_expected_modes(const Molecule& molecule) {
@@ -47,23 +47,28 @@ static int get_expected_modes(const Molecule& molecule) {
     return 3 * n - 6;
 }
 
-static void print_usage() {
-    
-    std::cout << "\nUsage:\n"
-              << "  ./vibrational_frequency vibration        <xyz> <hessian_dat> [--animate]\n"
-              << "  ./vibrational_frequency finite-diff      <xyz> <out_hessian> <step>\n"
-              << "  ./vibrational_frequency finite-diff-vib  <xyz> <out_hessian> <step> [--animate]\n"
-              << "  ./vibrational_frequency dipole           <xyz>\n"
-              << "  ./vibrational_frequency dipole-scf       <xyz> <p_diagonal_file>\n"
-              << "  ./vibrational_frequency validate         <computed_freq> <reference_freq>\n"
-              << "\n"
-              << "Environment variable for finite-diff modes:\n"
-              << "  export CNDO_ENERGY_CMD=\"./cndo_energy\"\n"
-              << "\n"
-              << "Options:\n"
-              << "  --animate   also write normal_modes.xyz for Avogadro/VMD visualization\n";
+static std::string get_cndo_command() {
+    const char* cmd = std::getenv("CNDO_ENERGY_CMD");
+
+    if (cmd) {
+        return std::string(cmd);
+    }
+
+    return "./cndo_energy";
 }
 
+static void print_usage() {
+    std::cout << "\nUsage:\n"
+              << "  ./vibrational_frequency vibration       <xyz> <hessian_dat> [--animate]\n"
+              << "  ./vibrational_frequency finite-diff     <xyz> <out_hessian> <step>\n"
+              << "  ./vibrational_frequency finite-diff-vib <xyz> <out_hessian> <step> [--animate]\n"
+              << "  ./vibrational_frequency dipole          <xyz>\n"
+              << "  ./vibrational_frequency dipole-scf      <xyz> <p_diagonal_file>\n"
+              << "  ./vibrational_frequency validate        <computed_freq> <reference_freq>\n"
+              << "\n"
+              << "Optional environment variable:\n"
+              << "  export CNDO_ENERGY_CMD=\"./cndo_energy\"\n";
+}
 
 int main(int argc, char* argv[]) {
     try {
@@ -114,18 +119,11 @@ int main(int argc, char* argv[]) {
             std::string output_hessian = argv[3];
             double step = std::stod(argv[4]);
 
-            const char* cmd = std::getenv("CNDO_ENERGY_CMD");
-            if (!cmd) {
-                std::cout << "Error: CNDO_ENERGY_CMD not set.\n"
-                          << "Example: export CNDO_ENERGY_CMD=\"./cndo_energy\"\n";
-                return 1;
-            }
-
             Molecule molecule;
             molecule.read_xyz(xyz_file);
             print_molecule_info(xyz_file, molecule);
 
-            CNDOEngine engine(cmd);
+            CNDOEngine engine(get_cndo_command());
             FiniteDifference fd(step);
 
             Hessian hessian = fd.compute_hessian(molecule, engine);
@@ -145,18 +143,11 @@ int main(int argc, char* argv[]) {
             double step = std::stod(argv[4]);
             bool animate = (argc >= 6 && std::string(argv[5]) == "--animate");
 
-            const char* cmd = std::getenv("CNDO_ENERGY_CMD");
-            if (!cmd) {
-                std::cout << "Error: CNDO_ENERGY_CMD not set.\n"
-                          << "Example: export CNDO_ENERGY_CMD=\"./cndo_energy\"\n";
-                return 1;
-            }
-
             Molecule molecule;
             molecule.read_xyz(xyz_file);
             print_molecule_info(xyz_file, molecule);
 
-            CNDOEngine engine(cmd);
+            CNDOEngine engine(get_cndo_command());
             FiniteDifference fd(step);
 
             Hessian hessian = fd.compute_hessian(molecule, engine);
@@ -190,16 +181,16 @@ int main(int argc, char* argv[]) {
 
             std::cout << "Running CNDO/2 SCF to generate p_diagonal.dat...\n";
 
-            CNDOEngine engine("./cndo_energy");
+            CNDOEngine engine(get_cndo_command());
             double energy = engine.compute_energy(molecule);
 
             std::cout << "SCF energy = " << energy << " Hartree\n";
 
             std::vector<double> p_diagonal =
-                Validation::read_frequencies("p_diagonal.dat");
+                Validation::read_values("p_diagonal.dat");
 
             std::cout << "Loaded " << p_diagonal.size()
-                      << " SCF atomic populations from p_diagonal.dat\n";
+                      << " atomic populations from p_diagonal.dat\n";
 
             DipoleMoment dipole;
             dipole.compute(molecule, p_diagonal);
@@ -221,11 +212,7 @@ int main(int argc, char* argv[]) {
             print_molecule_info(xyz_file, molecule);
 
             std::vector<double> p_diagonal =
-                Validation::read_frequencies(pdiag_file);
-
-            std::cout << "Loaded " << p_diagonal.size()
-                      << " diagonal density values from: "
-                      << pdiag_file << "\n";
+                Validation::read_values(pdiag_file);
 
             DipoleMoment dipole;
             dipole.compute(molecule, p_diagonal);
@@ -240,10 +227,10 @@ int main(int argc, char* argv[]) {
             }
 
             std::vector<double> computed =
-                Validation::read_frequencies(argv[2]);
+                Validation::read_values(argv[2]);
 
             std::vector<double> reference =
-                Validation::read_frequencies(argv[3]);
+                Validation::read_values(argv[3]);
 
             Validation::compare(computed, reference);
         }
