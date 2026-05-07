@@ -127,28 +127,113 @@ cmake --build .
 
 # Vibrational Frequency Calculations
 
-Example: H₂
+## Generate Hessian Matrices
 
-Generate Hessian:
-
-```
+### H₂
+```bash
 ./vibrational_frequency finite-diff ../input/h2.xyz h2_fd.dat 0.005
 ```
+## HCl
+```
+./vibrational_frequency finite-diff ../input/hcl.xyz hcl_fd.dat 0.005
+```
+## H2O
+```
+./vibrational_frequency finite-diff ../input/h2o.xyz h2o_fd.dat 0.005
+```
+## NH3
+```
+./vibrational_frequency finite-diff ../input/nh3.xyz nh3_fd.dat 0.005
+```
 
-Compute frequencies:
+## Methanol
+```
+./vibrational_frequency finite-diff ../input/methanol.xyz methanol_fd.dat 0.005
+```
+## Formaldehyde
+```
+./vibrational_frequency finite-diff ../input/formaldehyde.xyz formaldehyde_fd.dat 0.005
+```
+
+## Acetaldehyde
+```
+./vibrational_frequency finite-diff ../input/acetaldehyde.xyz acetaldehyde_fd.dat 0.005
+```
+
+# Compute Vibrational Frequencies from Hessians
+
+## H₂
 ```
 ./vibrational_frequency vibration ../input/h2.xyz h2_fd.dat
 ```
 
-Compute frequencies directly from finite differences:
+## HCL
+```
+./vibrational_frequency vibration ../input/hcl.xyz hcl_fd.dat
+```
+
+## H2O
+```
+./vibrational_frequency vibration ../input/h2o.xyz h2o_fd.dat
+```
+
+## NH3
+```
+./vibrational_frequency vibration ../input/nh3.xyz nh3_fd.dat
+```
+
+## Methanol
+```
+./vibrational_frequency vibration ../input/methanol.xyz methanol_fd.dat
+```
+
+## Formaldehyde
+```
+./vibrational_frequency vibration ../input/formaldehyde.xyz formaldehyde_fd.dat
+```
+
+## Acetaldehyde
+```
+./vibrational_frequency vibration ../input/acetaldehyde.xyz acetaldehyde_fd.dat
+```
+
+# Compute Vibrational Frequencies Directly from Finite Differences
+
+## H₂
 ```
 ./vibrational_frequency finite-diff-vib ../input/h2.xyz h2_fd.dat 0.005
 ```
 
-Generate vibrational animations:
+## HCL
 ```
-./vibrational_frequency finite-diff-vib ../input/h2.xyz h2_fd.dat 0.005 --animate
+./vibrational_frequency finite-diff-vib ../input/hcl.xyz hcl_fd.dat 0.005
 ```
+
+## H2O
+```
+./vibrational_frequency finite-diff-vib ../input/h2o.xyz h2o_fd.dat 0.005
+```
+
+## NH3
+```
+./vibrational_frequency finite-diff-vib ../input/nh3.xyz nh3_fd.dat 0.005
+```
+
+## Methanol
+```
+./vibrational_frequency finite-diff-vib ../input/methanol.xyz methanol_fd.dat 0.005
+```
+
+## Formaldehyde
+```
+./vibrational_frequency finite-diff-vib ../input/formaldehyde.xyz formaldehyde_fd.dat 0.005
+```
+
+## Acetaldehyde
+```
+./vibrational_frequency finite-diff-vib ../input/acetaldehyde.xyz acetaldehyde_fd.dat 0.005
+```
+
 
 # Dipole Moment Calculations
 
