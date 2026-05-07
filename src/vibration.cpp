@@ -8,18 +8,19 @@
 #include <stdexcept>
 #include <vector>
 
-// Hessian from finite_difference.cpp should be in Hartree / Bohr^2.
-// For mass-weighting in atomic units, convert masses:
-// 1 amu = 1822.888486 electron masses.
+// The Hessian from finite_difference.cpp is treated as Hartree / Bohr^2.
+// Atomic masses are stored in amu, so they are converted to atomic units
+// before building the mass-weighted Hessian.
 
 
 static constexpr double AMU_TO_AU = 1822.888486;
 
-// Converts sqrt(eigenvalue in atomic units) to cm^-1:
+// Conversion factor used to convert sqrt(eigenvalue) to cm^-1.
+// This value is appropriate for the mass-weighted Hessian workflow used here.
 
-static constexpr double AU_TO_CM = 219474.63137; 
+static constexpr double AU_TO_CM = 5140.48;
 
-// Small frequencies are treated as translation/rotation modes:
+// Very small frequencies are treated as translation/rotation modes.
 
 static constexpr double FREQ_ZERO_THRESHOLD = 10.0;
 
@@ -40,10 +41,8 @@ void Vibrations::compute(const Molecule& molecule, const Hessian& hessian) {
         );
     }
 
-    std::vector<double> masses = molecule.get_masses();  // amu
+    std::vector<double> masses = molecule.get_masses();
 
-    // Load Hessian into Eigen matrix:
-    
     Eigen::MatrixXd H(dim, dim);
     for (int i = 0; i < dim; i++) {
         for (int j = 0; j < dim; j++) {
@@ -51,12 +50,12 @@ void Vibrations::compute(const Molecule& molecule, const Hessian& hessian) {
         }
     }
 
-    // Make sure Hessian is symmetric:
+    // Numerical finite differences can create tiny asymmetries, so we force
+    // the Hessian to be exactly symmetric before diagonalization.
+
     
     H = 0.5 * (H + H.transpose());
 
-    // Mass-weight Hessian using atomic-unit masses:
-    
     Eigen::MatrixXd MW(dim, dim);
     for (int i = 0; i < dim; i++) {
         double mi = masses[i / 3] * AMU_TO_AU;
@@ -89,16 +88,23 @@ void Vibrations::compute(const Molecule& molecule, const Hessian& hessian) {
         if (lambda >= 0.0) {
             freq = std::sqrt(lambda) * AU_TO_CM;
         } else {
+            // Negative eigenvalues are printed as negative frequencies.
+            // These can indicate numerical noise or an unstable geometry.
+
+            
             freq = -std::sqrt(-lambda) * AU_TO_CM;
         }
 
         all_modes.push_back({freq, eigenvecs.col(i)});
     }
 
-    std::sort(all_modes.begin(), all_modes.end(),
-              [](const Mode& a, const Mode& b) {
-                  return a.freq_cm < b.freq_cm;
-              });
+    std::sort(
+        all_modes.begin(),
+        all_modes.end(),
+        [](const Mode& a, const Mode& b) {
+            return a.freq_cm < b.freq_cm;
+        }
+    );
 
     int expected_modes = is_linear_molecule(molecule)
                          ? 3 * n_atoms - 5
@@ -111,7 +117,9 @@ void Vibrations::compute(const Molecule& molecule, const Hessian& hessian) {
         }
     }
 
-    // If there are extra modes, remove the lowest-frequency ones:
+    // If numerical noise leaves too many modes, remove the lowest-frequency
+    // modes until the expected number of vibrational modes remains.
+
     
     if (static_cast<int>(real_modes.size()) > expected_modes) {
         int extra = static_cast<int>(real_modes.size()) - expected_modes;
@@ -128,7 +136,7 @@ void Vibrations::compute(const Molecule& molecule, const Hessian& hessian) {
 }
 
 void Vibrations::print_frequencies() const {
-    std::cout << "\n Vibrational Frequencies: \n";
+    std::cout << "\n--- Vibrational Frequencies ---\n";
 
     for (size_t i = 0; i < frequencies.size(); i++) {
         std::cout << "  Mode " << i + 1
@@ -136,7 +144,7 @@ void Vibrations::print_frequencies() const {
     }
 
     std::cout << "----------------------------------------------\n";
-    std::cout << "Reference values (Psi4/experimental value):\n";
+    std::cout << "Reference values (Psi4/experimental values):\n";
     std::cout << "  H2:  ~4400 cm^-1  (stretch)\n";
     std::cout << "  HCl: ~2990 cm^-1  (stretch)\n";
     std::cout << "  H2O: ~1595, ~3657, ~3756 cm^-1\n";
