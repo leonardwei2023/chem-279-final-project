@@ -284,6 +284,8 @@ These molecules were selected to represent chemically and pharmaceutically relev
 | H₂O | Dipole Moment | 0.45 D | 1.85 D | Polar molecular character reproduced qualitatively |
 | NH₃ | Dipole Moment | 0.54 D | 1.47 D | Correctly predicts polarity of amine-containing system |
 | Methanol | Dipole Moment | 4.20 D | ~1.70 D | Strong polarity associated with alcohol functional group captured |
+| Formaldehyde | Dipole Moment | 2.34 D | ~2.33 D | Excellent agreement for carbonyl polarity |
+| Acetaldehyde | Dipole Moment | 8.20 D | ~2.70 D | Polarity trend captured but overestimated for larger organic system |
 
 The CNDO/2 implementation successfully reproduced qualitative molecular trends in both vibrational frequencies and dipole moments. Small diatomic systems such as H₂ showed strong agreement with experimental vibrational frequencies, validating the finite-difference Hessian and mass-weighted vibrational workflow. More complex molecules such as H₂O, NH₃, and methanol exhibited larger deviations from experiment, which is expected for a simplified semiempirical model without geometry optimization or anharmonic corrections. Despite these quantitative limitations, the method correctly captured relative polarity trends and characteristic high-frequency stretching modes, demonstrating that CNDO/2 can provide useful qualitative insight into molecular behavior and pharmaceutically relevant functional-group properties.
 
