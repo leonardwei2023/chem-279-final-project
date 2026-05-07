@@ -210,6 +210,50 @@ These molecules were selected to represent chemically and pharmaceutically relev
 
 The CNDO/2 implementation successfully reproduced qualitative molecular trends in both vibrational frequencies and dipole moments. Small diatomic systems such as H₂ showed strong agreement with experimental vibrational frequencies, validating the finite-difference Hessian and mass-weighted vibrational workflow. More complex molecules such as H₂O, NH₃, and methanol exhibited larger deviations from experiment, which is expected for a simplified semiempirical model without geometry optimization or anharmonic corrections. Despite these quantitative limitations, the method correctly captured relative polarity trends and characteristic high-frequency stretching modes, demonstrating that CNDO/2 can provide useful qualitative insight into molecular behavior and functional-group properties relevant to pharmaceutical chemistry.
 
+## Experimental Validation References (NIST)
+
+Main CCCBDB Database
+
+- NIST Computational Chemistry Comparison and Benchmark Database (CCCBDB)
+- https://cccbdb.nist.gov/?utm_source
+
+## Molecule Validation Links
+
+1. H₂ (Hydrogen)
+- Experimental Data:
+- https://cccbdb.nist.gov/exp2x.asp?casno=1333740&utm
+
+2. HCl (Hydrogen Chloride)
+- Experimental Vibrational Data:
+- https://cccbdb.nist.gov/exp2x.asp?casno=7647010&charge=0&utm
+- Detailed Spectroscopic Constants:
+- https://webbook.nist.gov/cgi/cbook.cgi?ID=C7647010&Mask=20&utm
+
+3. H₂O (Water)
+- Experimental Vibrational Frequencies:
+- https://cccbdb.nist.gov/exp2x.asp?casno=7732185&charge=0&utm
+- Experimental Geometry Data:
+- https://cccbdb.nist.gov/expgeom2x.asp?casno=7732185&utm
+
+4. NH₃ (Ammonia)
+- Experimental Vibrational Frequencies:
+- https://cccbdb.nist.gov/exp2.asp?casno=7664417&utm
+- Experimental Geometry Data:
+- https://cccbdb.nist.gov/expgeom2x.asp?casno=7664417&charge=0&utm
+
+## Dipole Moment Validation
+
+NIST Experimental Dipole Moment Database
+
+Experimental Dipole Moments:
+- https://cccbdb.nist.gov/diplistx.asp?utm
+
+
+Experimental vibrational frequencies, dipole moments, and molecular geometries used for validation in this project were obtained from the National Institute of Standards and Technology (NIST) Computational Chemistry Comparison and Benchmark Database (CCCBDB).
+  
+
+
+
 
 ## Functional Group Trends
 
