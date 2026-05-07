@@ -39,6 +39,7 @@ Small molecular systems representing common functional groups were analyzed, inc
 
 The project focuses on understanding how functional groups influence molecular polarity, infrared-active vibrational modes, and spectroscopic behavior using an efficient semiempirical quantum chemistry framework.
 
+
 # Theory
 
 ## 1. CNDO/2 Self-Consistent Field Method
@@ -130,7 +131,7 @@ cmake --build .
 ## Generate Hessian Matrices
 
 ### H₂
-```bash
+```
 ./vibrational_frequency finite-diff ../input/h2.xyz h2_fd.dat 0.005
 ```
 ## HCl
@@ -146,19 +147,6 @@ cmake --build .
 ./vibrational_frequency finite-diff ../input/nh3.xyz nh3_fd.dat 0.005
 ```
 
-## Methanol
-```
-./vibrational_frequency finite-diff ../input/methanol.xyz methanol_fd.dat 0.005
-```
-## Formaldehyde
-```
-./vibrational_frequency finite-diff ../input/formaldehyde.xyz formaldehyde_fd.dat 0.005
-```
-
-## Acetaldehyde
-```
-./vibrational_frequency finite-diff ../input/acetaldehyde.xyz acetaldehyde_fd.dat 0.005
-```
 
 # Compute Vibrational Frequencies from Hessians
 
@@ -167,7 +155,7 @@ cmake --build .
 ./vibrational_frequency vibration ../input/h2.xyz h2_fd.dat
 ```
 
-## HCL
+## HCl
 ```
 ./vibrational_frequency vibration ../input/hcl.xyz hcl_fd.dat
 ```
@@ -182,20 +170,7 @@ cmake --build .
 ./vibrational_frequency vibration ../input/nh3.xyz nh3_fd.dat
 ```
 
-## Methanol
-```
-./vibrational_frequency vibration ../input/methanol.xyz methanol_fd.dat
-```
 
-## Formaldehyde
-```
-./vibrational_frequency vibration ../input/formaldehyde.xyz formaldehyde_fd.dat
-```
-
-## Acetaldehyde
-```
-./vibrational_frequency vibration ../input/acetaldehyde.xyz acetaldehyde_fd.dat
-```
 
 # Compute Vibrational Frequencies Directly from Finite Differences
 
@@ -204,7 +179,7 @@ cmake --build .
 ./vibrational_frequency finite-diff-vib ../input/h2.xyz h2_fd.dat 0.005
 ```
 
-## HCL
+## HCl
 ```
 ./vibrational_frequency finite-diff-vib ../input/hcl.xyz hcl_fd.dat 0.005
 ```
@@ -219,20 +194,6 @@ cmake --build .
 ./vibrational_frequency finite-diff-vib ../input/nh3.xyz nh3_fd.dat 0.005
 ```
 
-## Methanol
-```
-./vibrational_frequency finite-diff-vib ../input/methanol.xyz methanol_fd.dat 0.005
-```
-
-## Formaldehyde
-```
-./vibrational_frequency finite-diff-vib ../input/formaldehyde.xyz formaldehyde_fd.dat 0.005
-```
-
-## Acetaldehyde
-```
-./vibrational_frequency finite-diff-vib ../input/acetaldehyde.xyz acetaldehyde_fd.dat 0.005
-```
 
 
 # Dipole Moment Calculations
@@ -290,7 +251,7 @@ These molecules were selected to represent chemically and pharmaceutically relev
 | Molecule | Property                      | CNDO/2 Result | Experimental / Reference Value | Interpretation                        |
 | -------- | ----------------------------- | ------------: | -----------------------------: | ------------------------------------- |
 | H₂       | Stretch Vibrational Frequency |     4452 cm⁻¹ |                     ~4400 cm⁻¹ | Excellent agreement                   |
-| HCl      | Stretch Vibrational Frequency |     2731 cm⁻¹ |                     ~2991 cm⁻¹ | Good qualitative agreement            |
+| HCl      | Stretch Vibrational Frequency |     2731 cm⁻¹ |                     ~2991 cm⁻¹ | Reasonable qualitative agreement            |
 | H₂O      | Vibrational Mode 1            |     4284 cm⁻¹ |                     ~1595 cm⁻¹ | Overestimated bending mode            |
 | H₂O      | Vibrational Mode 2            |     4869 cm⁻¹ |                     ~3657 cm⁻¹ | Overestimated O–H stretch             |
 | H₂O      | Vibrational Mode 3            |     4885 cm⁻¹ |                     ~3756 cm⁻¹ | Overestimated O–H stretch             |
@@ -359,8 +320,6 @@ Main CCCBDB Database
 
 ## Dipole Moment Validation
 
-## Dipole Moment Validation
-
 Experimental dipole moment reference values used in this project were obtained from the NIST Computational Chemistry Comparison and Benchmark Database (CCCBDB).
 
 NIST Experimental Dipole Moment Database:
@@ -423,3 +382,14 @@ Possible future extensions include:
 University of California, Berkeley
 
 Spring 2026
+
+
+# References
+
+1. Pople, J. A.; Segal, G. A. Approximate Self‐Consistent Molecular Orbital Theory. II. Calculations with Complete Neglect of Differential Overlap. J. Chem. Phys. 1965.
+
+2. National Institute of Standards and Technology (NIST) Chemistry WebBook:
+https://webbook.nist.gov/chemistry/
+
+3. NIST Computational Chemistry Comparison and Benchmark Database (CCCBDB):
+https://cccbdb.nist.gov/
