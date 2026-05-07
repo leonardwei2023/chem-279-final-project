@@ -169,6 +169,22 @@ mu_z = -0.450 Debye
 |mu| = 0.450 Debye
 ```
 
+# Input Molecules
+
+The `input/` directory contains molecular geometry files in XYZ format used for vibrational frequency and dipole moment calculations.
+
+| File | Description |
+|------|-------------|
+| `h2.xyz` | Hydrogen molecule (nonpolar reference system) |
+| `hcl.xyz` | Hydrogen chloride molecule representing a polar covalent bond |
+| `h2o.xyz` | Water molecule containing an O–H functional group |
+| `nh3.xyz` | Ammonia molecule containing an N–H functional group |
+| `methanol.xyz` | Alcohol functional group model (O–H) |
+| `formaldehyde.xyz` | Carbonyl functional group model (C=O) |
+| `acetaldehyde.xyz` | Aldehyde functional group model |
+
+These molecules were selected to represent chemically and pharmaceutically relevant functional groups used for qualitative comparison of vibrational and polarity trends.
+
 ## Results Summary
 
 | Molecule | Property          | CNDO/2 Result | Experimental / Reference |
