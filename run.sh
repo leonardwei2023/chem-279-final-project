@@ -64,6 +64,7 @@ echo "Generating optional normal mode animation for H2..."
 ./vibrational_frequency finite-diff-vib ../input/h2.xyz h2_fd.dat 0.005 --animate
 
 echo ""
+echo " Chem 279 Final Project Report - Done."
 echo "All calculations completed successfully."
 echo "Generated files are located in the build directory."
 echo "Examples:"
@@ -73,3 +74,4 @@ echo "  h2o_fd.dat"
 echo "  computed_frequencies.dat"
 echo "  dipole_moment.dat"
 echo "  normal_modes.xyz"
+echo "  End."
