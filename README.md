@@ -1,6 +1,6 @@
 # Qualitative Prediction of Vibrational Frequencies and Dipole Moments in Drug-Relevant Molecular Fragments Using CNDO/2 
 
-> How Functional Groups Influence Polarity and Vibrational Signatures in Drug-Like Molecules
+> How Functional Groups Influence Polarity and Vibrational Signatures in pharmaceutically relevant molecular fragments
 - Authors: David Houshangi, Leonard Ming Wei
 - CHEM 279 – Numerical Algorithms in Computational Quantum Chemistry 
 - Methods: CNDO/2, SCF, Finite-Difference Hessian, Vibrational Analysis, Dipole Moments
@@ -38,6 +38,22 @@ Small molecular systems representing common functional groups were analyzed, inc
 - Acetaldehyde
 
 The project focuses on understanding how functional groups influence molecular polarity, infrared-active vibrational modes, and spectroscopic behavior using an efficient semiempirical quantum chemistry framework.
+
+## Recommended Demonstration Systems
+
+Recommended molecules for vibrational frequency calculations:
+- H2
+- HCl
+- H2O
+
+Recommended molecules for dipole moment calculations:
+- H2
+- HCl
+- H2O
+- NH3
+- Methanol
+- Formaldehyde
+- Acetaldehyde
 
 
 # Theory
@@ -119,7 +135,9 @@ chem-279-final-project/
 # Build Instructions
 
 ## Local Build
-```mkdir build
+
+```bash
+mkdir build
 cd build
 
 cmake ..
@@ -142,10 +160,6 @@ cmake --build .
 ```
 ./vibrational_frequency finite-diff ../input/h2o.xyz h2o_fd.dat 0.005
 ```
-## NH3
-```
-./vibrational_frequency finite-diff ../input/nh3.xyz nh3_fd.dat 0.005
-```
 
 
 # Compute Vibrational Frequencies from Hessians
@@ -165,12 +179,6 @@ cmake --build .
 ./vibrational_frequency vibration ../input/h2o.xyz h2o_fd.dat
 ```
 
-## NH3
-```
-./vibrational_frequency vibration ../input/nh3.xyz nh3_fd.dat
-```
-
-
 
 # Compute Vibrational Frequencies Directly from Finite Differences
 
@@ -188,12 +196,6 @@ cmake --build .
 ```
 ./vibrational_frequency finite-diff-vib ../input/h2o.xyz h2o_fd.dat 0.005
 ```
-
-## NH3
-```
-./vibrational_frequency finite-diff-vib ../input/nh3.xyz nh3_fd.dat 0.005
-```
-
 
 
 # Dipole Moment Calculations
@@ -216,6 +218,16 @@ Ammonia (NH₃)
 Methanol
 ```
 ./vibrational_frequency dipole ../input/methanol.xyz
+```
+
+Formaldehyde
+```
+./vibrational_frequency dipole ../input/formaldehyde.xyz
+```
+
+Acetaldehyde
+```
+./vibrational_frequency dipole ../input/acetaldehyde.xyz
 ```
 
 ## Example Output
