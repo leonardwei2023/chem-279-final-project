@@ -152,7 +152,7 @@ From the main project directory:
 ```bash
 chmod +x run.sh
 ./run.sh
-
+```
 All calculations are executed from the build directory.
 
 Example:
