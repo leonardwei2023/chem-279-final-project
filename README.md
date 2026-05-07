@@ -1,152 +1,160 @@
-# Calculation of Molecular Dipole Moments and Basic Vibrational Frequencies using CNDO/2
+# Overview
 
-**CHEM 279 — Final Project**  
+This project implements a modular computational quantum chemistry workflow using the CNDO/2 semiempirical method to study vibrational frequencies and dipole moments in small molecular systems relevant to common pharmaceutical functional groups.
 
-David Houshangi
+The project includes:
 
-Leonard Ming Wei  
+- CNDO/2 self-consistent field (SCF) energy calculations
+- Finite-difference Hessian generation
+- Vibrational frequency calculations
+- Dipole moment calculations from SCF electron populations
+- Validation against Psi4 reference calculations
+- Visualization of molecular vibrations and normal modes
 
-UC Berkeley  
+The primary goal of this project is to evaluate whether CNDO/2 can reproduce qualitative trends in molecular polarity and vibrational behavior across chemically relevant functional groups.
 
----
+Small molecular systems representing common functional groups were analyzed, including:
 
-## Overview
+- H₂
+- HCl
+- H₂O
+- NH₃
+- Methanol
+- Formaldehyde
+- Acetaldehyde
 
-This project implements a simple quantum chemistry workflow using the **CNDO/2 semi-empirical method**.
+The project focuses on understanding how functional groups influence molecular polarity, infrared-active vibrational modes, and spectroscopic behavior using an efficient semiempirical quantum chemistry framework.
 
-The program is able to:
-- Compute **vibrational frequencies** using a finite-difference Hessian
-- Generate a **Hessian matrix** directly from CNDO/2 energies
-- Compute **dipole moments** using the SCF electron density
+# Theory
 
-All calculations are performed internally (no precomputed data files are required).
+## 1. CNDO/2 Self-Consistent Field Method
 
----
+The CNDO/2 method is a semiempirical quantum chemistry approximation that simplifies electronic integrals using the Complete Neglect of Differential Overlap (CNDO) approximation.
 
-## What This Project Does
+The SCF procedure iteratively computes:
 
-### 1. CNDO/2 SCF Energy
+- molecular electronic energy
+- electron density
+- atomic electron populations
 
-The program performs a **self-consistent field (SCF)** calculation to obtain:
+Atomic populations are written to:
 
-- Total molecular energy  
-- Electron density (via atomic populations)  
-- Atomic populations written to `p_diagonal.dat`  
+p_diagonal.dat
 
-These populations are later used for dipole moment calculations.
-
----
-
-### 2. Vibrational Frequencies
-
-Vibrational frequencies are computed through:
-
-1. Building a **finite-difference Hessian**
-2. Converting to a **mass-weighted Hessian**
-3. Solving the eigenvalue problem
-
-Final frequencies are reported in:
-
-```
-cm⁻¹
-```
+These populations are later used in dipole moment calculations.
 
 ---
 
-### 3. Finite-Difference Hessian
+## 2. Vibrational Frequencies
 
-The Hessian is computed numerically:
+Vibrational frequencies are computed using a finite-difference Hessian approach.
 
-- Each coordinate is displaced by a small step size  
-- Energy is recomputed using CNDO/2  
-- Second derivatives are assembled  
+The procedure consists of:
 
-This creates a fully consistent pipeline:
+1. Displacing atomic coordinates by a small step size
+2. Recomputing molecular energy using CNDO/2
+3. Constructing the Hessian matrix from second derivatives
+4. Building the mass-weighted Hessian
+5. Solving the eigenvalue problem
 
-```
+Final frequencies are reported in: cm⁻¹
+
+The implemented workflow creates a fully self-consistent pipeline:
+
 Energy → Hessian → Vibrational Frequencies
-```
 
 ---
 
-### 4. Dipole Moment (SCF-Based)
+## 3. Dipole Moment Calculation
 
 The dipole moment is computed using:
 
-```
 μ = Σ_A (Z_A − P_AA) R_A
-```
 
 Where:
 
-- `Z_A` = nuclear charge  
-- `P_AA` = electron population on atom A  
-- `R_A` = atomic position  
+- Z_A = nuclear charge on atom A
+- P_AA = SCF electron population on atom A
+- R_A = atomic position vector
 
-The final result is converted to:
-
-```
-Debye
-```
+The final dipole moment is reported in: Debye
 
 ---
 
-## Project Structure
+# Project Structure
 
-```
-.
-├── include/        # Header files
-├── src/            # Source files
-├── input/          # Molecule files (.xyz)
-├── build/          # Build directory
+```text
+chem-279-final-project/
+│
+├── include/          # Header files
+├── src/              # Source files
+├── input/            # Molecular geometry files (.xyz)
+├── scripts/          # Psi4 validation scripts
+├── visualization/    # Visualization and plotting tools
+├── output/           # Generated results
+│
 ├── CMakeLists.txt
-└── README.md
+├── Dockerfile
+├── README.md
+└── .gitignore
 ```
 
----
+# Build Instructions
 
-## Build Instructions
-
-```bash
-mkdir build
+## Local Build
+```mkdir build
 cd build
+
 cmake ..
 cmake --build .
 ```
 
----
+# Vibrational Frequency Calculations
 
-## How to Run
+Example: H₂
 
-### 1. Vibrational Frequency (Recommended: H₂)
+Generate Hessian:
 
-```bash
-export CNDO_ENERGY_CMD="./cndo_energy"
-
+```
 ./vibrational_frequency finite-diff ../input/h2.xyz h2_fd.dat 0.005
+```
+
+Compute frequencies:
+```
 ./vibrational_frequency vibration ../input/h2.xyz h2_fd.dat
 ```
 
----
+Compute frequencies directly from finite differences:
+```
+./vibrational_frequency finite-diff-vib ../input/h2.xyz h2_fd.dat 0.005
+```
 
-### 2. Dipole Moment Calculations
+Generate vibrational animations:
+```
+./vibrational_frequency finite-diff-vib ../input/h2.xyz h2_fd.dat 0.005 --animate
+```
 
-#### Water (H₂O)
-```bash
+# Dipole Moment Calculations
+
+Water (H₂O)
+```
 ./vibrational_frequency dipole ../input/h2o.xyz
 ```
 
-#### Hydrogen Chloride (HCl)
-```bash
+Hydrogen Chloride (HCl)
+```
 ./vibrational_frequency dipole ../input/hcl.xyz
 ```
 
-#### Ammonia (NH₃)
-```bash
+Ammonia (NH₃)
+```
 ./vibrational_frequency dipole ../input/nh3.xyz
 ```
 
----
+Methanol
+```
+./vibrational_frequency dipole ../input/methanol.xyz
+```
 
 ## Example Output
 
@@ -154,58 +162,67 @@ export CNDO_ENERGY_CMD="./cndo_energy"
 SCF energy = -12.2475 Hartree
 
 Dipole Moment
-mu_x = 0
-mu_y = 0
+mu_x = 0.000
+mu_y = 0.000
 mu_z = -0.450 Debye
+
 |mu| = 0.450 Debye
 ```
 
----
-
 ## Results Summary
 
-| Molecule | Property           | Result (Theoretical values) | Experimental values |
-|----------|-------------------|--------------------|--------------|
-| H₂       | Stretch frequency | ~4404 cm⁻¹         | ~4400 cm⁻¹   |
-| H₂O      | Dipole moment     | ~0.45 Debye        | 1.85 Debye   |
-| HCl      | Dipole moment     | ~0.24 Debye        | 1.08 Debye   |
-| NH₃      | Dipole moment     | ~0.53 Debye        | 1.47 Debye   |
+| Molecule | Property          | CNDO/2 Result | Experimental / Reference |
+| -------- | ----------------- | ------------- | ------------------------ |
+| H₂       | Stretch frequency | ~4404 cm⁻¹    | ~4400 cm⁻¹               |
+| H₂O      | Dipole moment     | ~0.45 Debye   | 1.85 Debye               |
+| HCl      | Dipole moment     | ~0.24 Debye   | 1.08 Debye               |
+| NH₃      | Dipole moment     | ~0.53 Debye   | 1.47 Debye               |
 
----
+The project focuses primarily on qualitative molecular trends rather than exact quantitative agreement.
 
-## Notes
+## Functional Group Trends
 
-- Only **closed-shell systems** are supported  
-- Uses **valence electrons only (CNDO/2 approximation)**  
-- No geometry optimization is performed  
-- Finite-difference step size strongly affects accuracy  
-- Dipole moments are computed directly from SCF populations  
-- Vibrational analysis is most reliable for small systems (e.g., H₂)
+Observed trends include:
 
----
+- O–H groups produce strong dipole moments and high stretching frequencies
+- Carbonyl groups exhibit strong IR-active vibrational modes
+- Nonpolar molecules such as H₂ produce negligible dipole moments
+- Polar bonds such as H–Cl generate significant molecular polarity
 
-## Output Files
+These trends are relevant for understanding molecular behavior in pharmaceutical and biologically relevant systems.
 
-| File               | Description                      |
-|--------------------|----------------------------------|
-| `p_diagonal.dat`   | Atomic electron populations      |
-| `*_fd.dat`         | Generated Hessian matrices       |
-| `normal_modes.xyz` | Optional vibrational animation   |
+## Limitations
 
----
+Current limitations of the implementation include:
 
-## Tips
+- Closed-shell systems only
+- CNDO/2 semiempirical approximation
+- No geometry optimization
+- Sensitivity to finite-difference step size
+- Reduced quantitative accuracy for larger molecules
+- Vibrational analysis most reliable for small molecular systems
 
-- Use step size **0.003–0.005 Å** for stable Hessians  
-- Always generate Hessians using finite differences  
-- Ensure `.xyz` files are formatted correctly  
-- Compare trends (not exact values) with experiment  
+This project focuses on reproducing qualitative molecular trends rather than highly accurate ab initio predictions.
 
----
+## Future Work
+
+Possible future extensions include:
+
+- geometry optimization
+- improved SCF convergence schemes
+- larger molecular systems
+- Density Functional Theory (DFT) comparisons
+- solvent effects
+- automated visualization pipelines
+- expanded pharmaceutical functional-group analysis
 
 ## Authors
 
-David Houshangi  
-Leonard Ming Wei  
+- David Houshangi
+- Leonard Ming Wei
+
+CHEM 279 — Numerical Algorithms in Computational Quantum Chemistry
+
+University of California, Berkeley
 
 Spring 2026
