@@ -153,6 +153,11 @@ From the main project directory:
 chmod +x run.sh
 ./run.sh
 ```
+## Get the out put for ./run.sh
+```bash
+chmod +x run.sh
+./run.sh output.txt
+```
 All calculations are executed from the build directory.
 
 Example:
