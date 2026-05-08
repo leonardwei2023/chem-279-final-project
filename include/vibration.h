@@ -51,6 +51,11 @@ public:
         double amplitude = 0.3
     ) const;
 
+    void write_modes_json(
+        const Molecule& molecule,
+        const std::string& filename
+    ) const;
+
     std::vector<double> get_frequencies() const;
 
 private:

@@ -8,6 +8,8 @@
 #include <stdexcept>
 #include <vector>
 
+#include <nlohmann/json.hpp>
+
 // The Hessian from finite_difference.cpp is treated as Hartree / Bohr^2.
 // Atomic masses are stored in amu, so they are converted to atomic units
 // before building the mass-weighted Hessian.
@@ -220,4 +222,59 @@ void Vibrations::write_normal_mode_xyz(
     }
 
     std::cout << "Normal mode animation written to: " << filename << "\n";
+}
+
+void Vibrations::write_modes_json(
+    const Molecule& molecule,
+    const std::string& filename
+) const {
+
+    using json = nlohmann::json;
+
+    json out;
+
+    int n_atoms = molecule.get_num_atoms();
+    auto symbols = molecule.get_symbols();
+    auto coords = molecule.get_coordinates();
+
+    out["n_atoms"] = n_atoms;
+
+    json atoms = json::array();
+    for (auto& s : symbols) atoms.push_back(s);
+    out["atoms"] = atoms;
+
+    json base = json::array();
+    for (double c : coords) base.push_back(c);
+    out["base_coords"] = base;
+
+    json modes = json::array();
+
+    for (size_t m = 0; m < eigenvectors.size(); m++) {
+
+        const auto& vec = eigenvectors[m];
+
+        double norm = vec.norm();
+        if (norm < 1e-12) continue;
+
+        json mode;
+        mode["frequency_cm-1"] = frequencies[m];
+
+        json disp = json::array();
+
+        for (int i = 0; i < n_atoms; i++) {
+            disp.push_back({
+                {"dx", vec(3*i)     / norm},
+                {"dy", vec(3*i + 1) / norm},
+                {"dz", vec(3*i + 2) / norm}
+            });
+        }
+
+        mode["displacements"] = disp;
+        modes.push_back(mode);
+    }
+
+    out["modes"] = modes;
+
+    std::ofstream f(filename);
+    f << out.dump(2);
 }

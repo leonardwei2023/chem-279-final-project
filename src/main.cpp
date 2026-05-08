@@ -6,6 +6,7 @@
 #include "validation.h"
 #include "vibration.h"
 
+#include <filesystem>
 #include <cstdlib>
 #include <exception>
 #include <iostream>
@@ -106,6 +107,12 @@ int main(int argc, char* argv[]) {
 
             if (animate) {
                 vibrations.write_normal_mode_xyz(molecule, "normal_modes.xyz");
+
+                std::filesystem::path p(xyz_file);
+                std::filesystem::path output = 
+                    std::filesystem::path("../visualization/modes") /
+                    (p.stem().string() + "_modes.json");
+                vibrations.write_modes_json(molecule, output);
             }
         }
 
@@ -164,6 +171,12 @@ int main(int argc, char* argv[]) {
 
             if (animate) {
                 vibrations.write_normal_mode_xyz(molecule, "normal_modes.xyz");
+                
+                std::filesystem::path p(xyz_file);
+                std::filesystem::path output = 
+                    std::filesystem::path("../visualization/modes") /
+                    (p.stem().string() + "_modes.json");
+                vibrations.write_modes_json(molecule, output);
             }
         }
 
