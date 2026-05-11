@@ -119,7 +119,6 @@ chem-279-final-project/
 ├── include/              # Header files
 ├── src/                  # Source files
 ├── input/                # Molecular geometry files (.xyz)
-├── scripts/              # Validation and helper scripts
 ├── visualization/        # Visualization and plotting tools
 ├── output/               # Generated Hessians, frequencies, and outputs
 ├── report/               # Final report PDF and supporting files
@@ -128,6 +127,7 @@ chem-279-final-project/
 ├── CMakeLists.txt
 ├── Dockerfile
 ├── README.md
+├── rubric.md
 └── .gitignore
 ```
 
@@ -152,6 +152,11 @@ From the main project directory:
 ```bash
 chmod +x run.sh
 ./run.sh
+```
+## Get the out put for ./run.sh
+```bash
+chmod +x run.sh
+./run.sh output.txt
 ```
 All calculations are executed from the build directory.
 
