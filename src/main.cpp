@@ -209,6 +209,12 @@ int main(int argc, char* argv[]) {
             dipole.compute(molecule, p_diagonal);
             dipole.print();
             dipole.write("dipole_moment.dat");
+
+            std::filesystem::path p(xyz_file);
+                std::filesystem::path output = 
+                    std::filesystem::path("../visualization/dipoles") /
+                    (p.stem().string() + "_dipole.json");
+            dipole.write_json(output);
         }
 
         else if (mode == "dipole-scf") {
@@ -231,6 +237,12 @@ int main(int argc, char* argv[]) {
             dipole.compute(molecule, p_diagonal);
             dipole.print();
             dipole.write("dipole_moment.dat");
+
+            std::filesystem::path p(xyz_file);
+                std::filesystem::path output = 
+                    std::filesystem::path("../visualization/dipoles") /
+                    (p.stem().string() + "_dipole.json");
+            dipole.write_json(output);
         }
 
         else if (mode == "validate") {

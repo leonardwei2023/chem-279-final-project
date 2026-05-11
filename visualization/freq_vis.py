@@ -28,8 +28,6 @@ if __name__ == "__main__":
         description="Visualize vibrational modes from JSON"
     )
 
-    
-
     parser.add_argument(
         "input",
         help="Input modes JSON file"

@@ -67,6 +67,8 @@ public:
     // Write dipole to file: x y z magnitude (Debye)
     void write(const std::string& filename) const;
 
+    void write_json(const std::string& filename) const;
+
     // Accessors
     std::array<double, 3> get_components_debye() const;
     double get_magnitude_debye() const;

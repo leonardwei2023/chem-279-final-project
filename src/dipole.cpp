@@ -9,6 +9,8 @@
 #include <string>
 #include <vector>
 
+#include <nlohmann/json.hpp>
+
 int DipoleMoment::get_valence_electrons(const std::string& symbol) {
     if (symbol == "H")  return 1;
     if (symbol == "C")  return 4;
@@ -84,7 +86,7 @@ void DipoleMoment::print() const {
     std::cout << "  H2:   0.00 Debye\n";
 }
 
-void DipoleMoment::write(const std::string& filename) const {
+void DipoleMoment::write(const std::string& filename, const std::vector<Atom>& atoms) const {
     std::ofstream file(filename);
 
     if (!file.is_open()) {
@@ -96,6 +98,47 @@ void DipoleMoment::write(const std::string& filename) const {
          << mu_debye[1] << " "
          << mu_debye[2] << " "
          << magnitude_debye << "\n";
+}
+
+void DipoleMoment::write_json(const std::string& filename) const {
+    using json = nlohmann::json;
+
+    std::ofstream file(filename);
+
+    if (!file.is_open()) {
+        throw std::runtime_error("DipoleMoment: could not write to: " + filename);
+    }
+
+    json j;
+
+    // -----------------------------
+    // Atoms section
+    // -----------------------------
+    j["atoms"] = json::array();
+
+    for (const auto& a : atoms) {
+        j["atoms"].push_back({
+            {"element", a.element},
+            {"x", a.x},
+            {"y", a.y},
+            {"z", a.z}
+        });
+    }
+
+    // -----------------------------
+    // Dipole section
+    // -----------------------------
+    j["dipole"] = {
+        {"units", "Debye"},
+        {"mu", {
+            {"x", mu_debye[0]},
+            {"y", mu_debye[1]},
+            {"z", mu_debye[2]}
+        }},
+        {"magnitude", magnitude_debye}
+    };
+
+    file << j.dump(4); 
 }
 
 std::array<double, 3> DipoleMoment::get_components_debye() const {
