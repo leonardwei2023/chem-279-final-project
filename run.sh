@@ -1,4 +1,3 @@
-
 #!/bin/bash
 
 set -e
@@ -62,6 +61,8 @@ echo "Acetaldehyde dipole..."
 echo ""
 echo "Generating optional normal mode animation for H2..."
 ./vibrational_frequency finite-diff-vib ../input/h2.xyz h2_fd.dat 0.005 --animate
+
+pip install py3Dmol
 
 echo ""
 echo "Generating visualizations in visualization/output"
