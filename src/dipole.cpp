@@ -86,7 +86,7 @@ void DipoleMoment::print() const {
     std::cout << "  H2:   0.00 Debye\n";
 }
 
-void DipoleMoment::write(const std::string& filename, const std::vector<Atom>& atoms) const {
+void DipoleMoment::write(const std::string& filename) const {
     std::ofstream file(filename);
 
     if (!file.is_open()) {
@@ -111,24 +111,7 @@ void DipoleMoment::write_json(const std::string& filename) const {
 
     json j;
 
-    // -----------------------------
-    // Atoms section
-    // -----------------------------
-    j["atoms"] = json::array();
-
-    for (const auto& a : atoms) {
-        j["atoms"].push_back({
-            {"element", a.element},
-            {"x", a.x},
-            {"y", a.y},
-            {"z", a.z}
-        });
-    }
-
-    // -----------------------------
-    // Dipole section
-    // -----------------------------
-    j["dipole"] = {
+    j = {
         {"units", "Debye"},
         {"mu", {
             {"x", mu_debye[0]},

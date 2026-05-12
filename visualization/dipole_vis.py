@@ -125,3 +125,5 @@ if __name__ == "__main__":
     dipole_vector = np.array([mu["x"], mu["y"], mu["z"]])
 
     show_dipole(dipole_vector, data["magnitude"], xyz, scale=1, output_file=args.output)
+
+    print(f"Wrote {args.output}")

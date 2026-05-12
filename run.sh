@@ -64,6 +64,11 @@ echo "Generating optional normal mode animation for H2..."
 ./vibrational_frequency finite-diff-vib ../input/h2.xyz h2_fd.dat 0.005 --animate
 
 echo ""
+echo "Generating visualizations in visualization/output"
+cd ..
+python visualization/run_vis.py
+
+echo ""
 echo " Chem 279 Final Project Report - Done."
 echo "All calculations completed successfully."
 echo "Generated files are located in the build directory."

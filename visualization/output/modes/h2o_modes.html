@@ -1,0 +1,148 @@
+<html><body style='display:flex;flex-wrap:wrap;'><div style='margin:10px'><div id="3dmolviewer_17785469712390444"  style="position: relative; width: 300px; height: 300px;">
+        <p id="3dmolwarning_17785469712390444" style="background-color:#ffcccc;color:black">3Dmol.js failed to load for some reason.  Please check your browser console for error messages.<br></p>
+        </div>
+<script>
+
+var loadScriptAsync = function(uri){
+  return new Promise((resolve, reject) => {
+    //this is to ignore the existence of requirejs amd
+    var savedexports, savedmodule;
+    if (typeof exports !== 'undefined') savedexports = exports;
+    else exports = {}
+    if (typeof module !== 'undefined') savedmodule = module;
+    else module = {}
+
+    var tag = document.createElement('script');
+    tag.src = uri;
+    tag.async = true;
+    tag.onload = () => {
+        exports = savedexports;
+        module = savedmodule;
+        resolve();
+    };
+  var firstScriptTag = document.getElementsByTagName('script')[0];
+  firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+});
+};
+
+if(typeof $3Dmolpromise === 'undefined') {
+$3Dmolpromise = null;
+  $3Dmolpromise = loadScriptAsync('https://cdn.jsdelivr.net/npm/3dmol@2.5.4/build/3Dmol-min.js');
+}
+
+var viewer_17785469712390444 = null;
+var warn = document.getElementById("3dmolwarning_17785469712390444");
+if(warn) {
+    warn.parentNode.removeChild(warn);
+}
+$3Dmolpromise.then(function() {
+viewer_17785469712390444 = $3Dmol.createViewer(document.getElementById("3dmolviewer_17785469712390444"),{backgroundColor:"white"});
+viewer_17785469712390444.zoomTo();
+	viewer_17785469712390444.addModelsAsFrames("3\nmode\nO 0.000000 0.000000 0.000000\nH 0.758602 0.000000 0.504284\nH -0.758602 0.000000 0.504284\n3\nmode\nO 0.000000 -0.000000 0.000000\nH 0.758602 -0.045602 0.504284\nH -0.758602 0.045602 0.504284\n3\nmode\nO 0.000000 -0.000000 0.000000\nH 0.758602 -0.089072 0.504284\nH -0.758602 0.089072 0.504284\n3\nmode\nO 0.000000 -0.000000 0.000000\nH 0.758602 -0.128377 0.504284\nH -0.758602 0.128377 0.504284\n3\nmode\nO 0.000000 -0.000000 0.000000\nH 0.758602 -0.161679 0.504284\nH -0.758602 0.161679 0.504284\n3\nmode\nO 0.000000 -0.000000 0.000000\nH 0.758602 -0.187421 0.504284\nH -0.758602 0.187421 0.504284\n3\nmode\nO 0.000000 -0.000000 0.000000\nH 0.758602 -0.204400 0.504284\nH -0.758602 0.204400 0.504284\n3\nmode\nO 0.000000 -0.000000 0.000000\nH 0.758602 -0.211821 0.504284\nH -0.758602 0.211821 0.504284\n3\nmode\nO 0.000000 -0.000000 0.000000\nH 0.758602 -0.209338 0.504284\nH -0.758602 0.209338 0.504284\n3\nmode\nO 0.000000 -0.000000 0.000000\nH 0.758602 -0.197066 0.504284\nH -0.758602 0.197066 0.504284\n3\nmode\nO 0.000000 -0.000000 0.000000\nH 0.758602 -0.175579 0.504284\nH -0.758602 0.175579 0.504284\n3\nmode\nO 0.000000 -0.000000 0.000000\nH 0.758602 -0.145883 0.504284\nH -0.758602 0.145883 0.504284\n3\nmode\nO 0.000000 -0.000000 0.000000\nH 0.758602 -0.109365 0.504284\nH -0.758602 0.109365 0.504284\n3\nmode\nO 0.000000 -0.000000 0.000000\nH 0.758602 -0.067734 0.504284\nH -0.758602 0.067734 0.504284\n3\nmode\nO 0.000000 -0.000000 0.000000\nH 0.758602 -0.022936 0.504284\nH -0.758602 0.022936 0.504284\n3\nmode\nO 0.000000 0.000000 -0.000000\nH 0.758602 0.022936 0.504284\nH -0.758602 -0.022936 0.504284\n3\nmode\nO 0.000000 0.000000 -0.000000\nH 0.758602 0.067734 0.504284\nH -0.758602 -0.067734 0.504284\n3\nmode\nO 0.000000 0.000000 -0.000000\nH 0.758602 0.109365 0.504284\nH -0.758602 -0.109365 0.504284\n3\nmode\nO 0.000000 0.000000 -0.000000\nH 0.758602 0.145883 0.504284\nH -0.758602 -0.145883 0.504284\n3\nmode\nO 0.000000 0.000000 -0.000000\nH 0.758602 0.175579 0.504284\nH -0.758602 -0.175579 0.504284\n3\nmode\nO 0.000000 0.000000 -0.000000\nH 0.758602 0.197066 0.504284\nH -0.758602 -0.197066 0.504284\n3\nmode\nO 0.000000 0.000000 -0.000000\nH 0.758602 0.209338 0.504284\nH -0.758602 -0.209338 0.504284\n3\nmode\nO 0.000000 0.000000 -0.000000\nH 0.758602 0.211821 0.504284\nH -0.758602 -0.211821 0.504284\n3\nmode\nO 0.000000 0.000000 -0.000000\nH 0.758602 0.204400 0.504284\nH -0.758602 -0.204400 0.504284\n3\nmode\nO 0.000000 0.000000 -0.000000\nH 0.758602 0.187421 0.504284\nH -0.758602 -0.187421 0.504284\n3\nmode\nO 0.000000 0.000000 -0.000000\nH 0.758602 0.161679 0.504284\nH -0.758602 -0.161679 0.504284\n3\nmode\nO 0.000000 0.000000 -0.000000\nH 0.758602 0.128377 0.504284\nH -0.758602 -0.128377 0.504284\n3\nmode\nO 0.000000 0.000000 -0.000000\nH 0.758602 0.089072 0.504284\nH -0.758602 -0.089072 0.504284\n3\nmode\nO 0.000000 0.000000 -0.000000\nH 0.758602 0.045602 0.504284\nH -0.758602 -0.045602 0.504284\n3\nmode\nO 0.000000 0.000000 -0.000000\nH 0.758602 0.000000 0.504284\nH -0.758602 -0.000000 0.504284\n","xyz");
+	viewer_17785469712390444.setStyle({"stick": {}, "sphere": {"scale": 0.25}});
+	viewer_17785469712390444.animate({"loop": "forward"});
+	viewer_17785469712390444.zoomTo();
+	viewer_17785469712390444.rotate(-90,"x");
+	viewer_17785469712390444.rotate(0,"y");
+	viewer_17785469712390444.rotate(0,"z");
+viewer_17785469712390444.render();
+});
+</script></div><div style='margin:10px'><div id="3dmolviewer_177854697123905"  style="position: relative; width: 300px; height: 300px;">
+        <p id="3dmolwarning_177854697123905" style="background-color:#ffcccc;color:black">3Dmol.js failed to load for some reason.  Please check your browser console for error messages.<br></p>
+        </div>
+<script>
+
+var loadScriptAsync = function(uri){
+  return new Promise((resolve, reject) => {
+    //this is to ignore the existence of requirejs amd
+    var savedexports, savedmodule;
+    if (typeof exports !== 'undefined') savedexports = exports;
+    else exports = {}
+    if (typeof module !== 'undefined') savedmodule = module;
+    else module = {}
+
+    var tag = document.createElement('script');
+    tag.src = uri;
+    tag.async = true;
+    tag.onload = () => {
+        exports = savedexports;
+        module = savedmodule;
+        resolve();
+    };
+  var firstScriptTag = document.getElementsByTagName('script')[0];
+  firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+});
+};
+
+if(typeof $3Dmolpromise === 'undefined') {
+$3Dmolpromise = null;
+  $3Dmolpromise = loadScriptAsync('https://cdn.jsdelivr.net/npm/3dmol@2.5.4/build/3Dmol-min.js');
+}
+
+var viewer_177854697123905 = null;
+var warn = document.getElementById("3dmolwarning_177854697123905");
+if(warn) {
+    warn.parentNode.removeChild(warn);
+}
+$3Dmolpromise.then(function() {
+viewer_177854697123905 = $3Dmol.createViewer(document.getElementById("3dmolviewer_177854697123905"),{backgroundColor:"white"});
+viewer_177854697123905.zoomTo();
+	viewer_177854697123905.addModelsAsFrames("3\nmode\nO 0.000000 0.000000 0.000000\nH 0.758602 0.000000 0.504284\nH -0.758602 0.000000 0.504284\n3\nmode\nO -0.005542 -0.000000 0.000000\nH 0.776436 0.000000 0.462497\nH -0.740768 0.000000 0.546071\n3\nmode\nO -0.010825 -0.000000 0.000000\nH 0.793436 0.000000 0.422664\nH -0.723768 0.000000 0.585904\n3\nmode\nO -0.015602 -0.000000 0.000000\nH 0.808808 0.000000 0.386648\nH -0.708396 0.000000 0.621920\n3\nmode\nO -0.019649 -0.000000 0.000000\nH 0.821832 0.000000 0.356132\nH -0.695372 0.000000 0.652436\n3\nmode\nO -0.022777 -0.000000 0.000000\nH 0.831899 0.000000 0.332543\nH -0.685305 0.000000 0.676025\n3\nmode\nO -0.024841 -0.000000 0.000000\nH 0.838539 0.000000 0.316985\nH -0.678665 0.000000 0.691583\n3\nmode\nO -0.025742 -0.000000 0.000000\nH 0.841441 0.000000 0.310185\nH -0.675763 0.000000 0.698383\n3\nmode\nO -0.025441 -0.000000 0.000000\nH 0.840470 0.000000 0.312461\nH -0.676734 0.000000 0.696107\n3\nmode\nO -0.023949 -0.000000 0.000000\nH 0.835671 0.000000 0.323706\nH -0.681533 0.000000 0.684862\n3\nmode\nO -0.021338 -0.000000 0.000000\nH 0.827268 0.000000 0.343394\nH -0.689936 0.000000 0.665174\n3\nmode\nO -0.017729 -0.000000 0.000000\nH 0.815654 0.000000 0.370606\nH -0.701550 0.000000 0.637962\n3\nmode\nO -0.013291 -0.000000 0.000000\nH 0.801373 0.000000 0.404069\nH -0.715831 0.000000 0.604499\n3\nmode\nO -0.008232 -0.000000 0.000000\nH 0.785092 0.000000 0.442217\nH -0.732112 0.000000 0.566351\n3\nmode\nO -0.002787 -0.000000 0.000000\nH 0.767572 0.000000 0.483267\nH -0.749632 0.000000 0.525301\n3\nmode\nO 0.002787 0.000000 0.000000\nH 0.749632 0.000000 0.525301\nH -0.767572 0.000000 0.483267\n3\nmode\nO 0.008232 0.000000 0.000000\nH 0.732112 0.000000 0.566351\nH -0.785092 0.000000 0.442217\n3\nmode\nO 0.013291 0.000000 0.000000\nH 0.715831 0.000000 0.604499\nH -0.801373 0.000000 0.404069\n3\nmode\nO 0.017729 0.000000 0.000000\nH 0.701550 0.000000 0.637962\nH -0.815654 0.000000 0.370606\n3\nmode\nO 0.021338 0.000000 0.000000\nH 0.689936 0.000000 0.665174\nH -0.827268 0.000000 0.343394\n3\nmode\nO 0.023949 0.000000 0.000000\nH 0.681533 0.000000 0.684862\nH -0.835671 0.000000 0.323706\n3\nmode\nO 0.025441 0.000000 0.000000\nH 0.676734 0.000000 0.696107\nH -0.840470 0.000000 0.312461\n3\nmode\nO 0.025742 0.000000 0.000000\nH 0.675763 0.000000 0.698383\nH -0.841441 0.000000 0.310185\n3\nmode\nO 0.024841 0.000000 0.000000\nH 0.678665 0.000000 0.691583\nH -0.838539 0.000000 0.316985\n3\nmode\nO 0.022777 0.000000 0.000000\nH 0.685305 0.000000 0.676025\nH -0.831899 0.000000 0.332543\n3\nmode\nO 0.019649 0.000000 0.000000\nH 0.695372 0.000000 0.652436\nH -0.821832 0.000000 0.356132\n3\nmode\nO 0.015602 0.000000 0.000000\nH 0.708396 0.000000 0.621920\nH -0.808808 0.000000 0.386648\n3\nmode\nO 0.010825 0.000000 0.000000\nH 0.723768 0.000000 0.585904\nH -0.793436 0.000000 0.422664\n3\nmode\nO 0.005542 0.000000 0.000000\nH 0.740768 0.000000 0.546071\nH -0.776436 0.000000 0.462497\n3\nmode\nO 0.000000 0.000000 0.000000\nH 0.758602 0.000000 0.504284\nH -0.758602 0.000000 0.504284\n","xyz");
+	viewer_177854697123905.setStyle({"stick": {}, "sphere": {"scale": 0.25}});
+	viewer_177854697123905.animate({"loop": "forward"});
+	viewer_177854697123905.zoomTo();
+	viewer_177854697123905.rotate(-90,"x");
+	viewer_177854697123905.rotate(0,"y");
+	viewer_177854697123905.rotate(0,"z");
+viewer_177854697123905.render();
+});
+</script></div><div style='margin:10px'><div id="3dmolviewer_17785469712390578"  style="position: relative; width: 300px; height: 300px;">
+        <p id="3dmolwarning_17785469712390578" style="background-color:#ffcccc;color:black">3Dmol.js failed to load for some reason.  Please check your browser console for error messages.<br></p>
+        </div>
+<script>
+
+var loadScriptAsync = function(uri){
+  return new Promise((resolve, reject) => {
+    //this is to ignore the existence of requirejs amd
+    var savedexports, savedmodule;
+    if (typeof exports !== 'undefined') savedexports = exports;
+    else exports = {}
+    if (typeof module !== 'undefined') savedmodule = module;
+    else module = {}
+
+    var tag = document.createElement('script');
+    tag.src = uri;
+    tag.async = true;
+    tag.onload = () => {
+        exports = savedexports;
+        module = savedmodule;
+        resolve();
+    };
+  var firstScriptTag = document.getElementsByTagName('script')[0];
+  firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+});
+};
+
+if(typeof $3Dmolpromise === 'undefined') {
+$3Dmolpromise = null;
+  $3Dmolpromise = loadScriptAsync('https://cdn.jsdelivr.net/npm/3dmol@2.5.4/build/3Dmol-min.js');
+}
+
+var viewer_17785469712390578 = null;
+var warn = document.getElementById("3dmolwarning_17785469712390578");
+if(warn) {
+    warn.parentNode.removeChild(warn);
+}
+$3Dmolpromise.then(function() {
+viewer_17785469712390578 = $3Dmol.createViewer(document.getElementById("3dmolviewer_17785469712390578"),{backgroundColor:"white"});
+viewer_17785469712390578.zoomTo();
+	viewer_17785469712390578.addModelsAsFrames("3\nmode\nO 0.000000 0.000000 0.000000\nH 0.758602 0.000000 0.504284\nH -0.758602 0.000000 0.504284\n3\nmode\nO 0.000000 -0.000000 0.007732\nH 0.775741 0.000000 0.462380\nH -0.775741 -0.000000 0.462380\n3\nmode\nO 0.000000 -0.000000 0.015102\nH 0.792078 0.000000 0.422436\nH -0.792078 -0.000000 0.422436\n3\nmode\nO 0.000000 -0.000000 0.021766\nH 0.806850 0.000000 0.386318\nH -0.806850 -0.000000 0.386318\n3\nmode\nO 0.000000 -0.000000 0.027412\nH 0.819366 0.000000 0.355717\nH -0.819366 -0.000000 0.355717\n3\nmode\nO 0.000000 -0.000000 0.031777\nH 0.829040 0.000000 0.332062\nH -0.829040 -0.000000 0.332062\n3\nmode\nO 0.000000 -0.000000 0.034655\nH 0.835421 0.000000 0.316461\nH -0.835421 -0.000000 0.316461\n3\nmode\nO 0.000000 -0.000000 0.035914\nH 0.838210 0.000000 0.309641\nH -0.838210 -0.000000 0.309641\n3\nmode\nO 0.000000 -0.000000 0.035493\nH 0.837277 0.000000 0.311923\nH -0.837277 -0.000000 0.311923\n3\nmode\nO 0.000000 -0.000000 0.033412\nH 0.832665 0.000000 0.323200\nH -0.832665 -0.000000 0.323200\n3\nmode\nO 0.000000 -0.000000 0.029769\nH 0.824590 0.000000 0.342944\nH -0.824590 -0.000000 0.342944\n3\nmode\nO 0.000000 -0.000000 0.024734\nH 0.813429 0.000000 0.370232\nH -0.813429 -0.000000 0.370232\n3\nmode\nO 0.000000 -0.000000 0.018543\nH 0.799705 0.000000 0.403788\nH -0.799705 -0.000000 0.403788\n3\nmode\nO 0.000000 -0.000000 0.011484\nH 0.784058 0.000000 0.442043\nH -0.784058 -0.000000 0.442043\n3\nmode\nO 0.000000 -0.000000 0.003889\nH 0.767222 0.000000 0.483209\nH -0.767222 -0.000000 0.483209\n3\nmode\nO 0.000000 0.000000 -0.003889\nH 0.749982 -0.000000 0.525359\nH -0.749982 0.000000 0.525359\n3\nmode\nO 0.000000 0.000000 -0.011484\nH 0.733146 -0.000000 0.566525\nH -0.733146 0.000000 0.566525\n3\nmode\nO 0.000000 0.000000 -0.018543\nH 0.717499 -0.000000 0.604780\nH -0.717499 0.000000 0.604780\n3\nmode\nO 0.000000 0.000000 -0.024734\nH 0.703775 -0.000000 0.638336\nH -0.703775 0.000000 0.638336\n3\nmode\nO 0.000000 0.000000 -0.029769\nH 0.692614 -0.000000 0.665624\nH -0.692614 0.000000 0.665624\n3\nmode\nO 0.000000 0.000000 -0.033412\nH 0.684539 -0.000000 0.685368\nH -0.684539 0.000000 0.685368\n3\nmode\nO 0.000000 0.000000 -0.035493\nH 0.679927 -0.000000 0.696645\nH -0.679927 0.000000 0.696645\n3\nmode\nO 0.000000 0.000000 -0.035914\nH 0.678994 -0.000000 0.698927\nH -0.678994 0.000000 0.698927\n3\nmode\nO 0.000000 0.000000 -0.034655\nH 0.681783 -0.000000 0.692107\nH -0.681783 0.000000 0.692107\n3\nmode\nO 0.000000 0.000000 -0.031777\nH 0.688164 -0.000000 0.676506\nH -0.688164 0.000000 0.676506\n3\nmode\nO 0.000000 0.000000 -0.027412\nH 0.697838 -0.000000 0.652851\nH -0.697838 0.000000 0.652851\n3\nmode\nO 0.000000 0.000000 -0.021766\nH 0.710354 -0.000000 0.622250\nH -0.710354 0.000000 0.622250\n3\nmode\nO 0.000000 0.000000 -0.015102\nH 0.725126 -0.000000 0.586132\nH -0.725126 0.000000 0.586132\n3\nmode\nO 0.000000 0.000000 -0.007732\nH 0.741463 -0.000000 0.546188\nH -0.741463 0.000000 0.546188\n3\nmode\nO 0.000000 0.000000 -0.000000\nH 0.758602 -0.000000 0.504284\nH -0.758602 0.000000 0.504284\n","xyz");
+	viewer_17785469712390578.setStyle({"stick": {}, "sphere": {"scale": 0.25}});
+	viewer_17785469712390578.animate({"loop": "forward"});
+	viewer_17785469712390578.zoomTo();
+	viewer_17785469712390578.rotate(-90,"x");
+	viewer_17785469712390578.rotate(0,"y");
+	viewer_17785469712390578.rotate(0,"z");
+viewer_17785469712390578.render();
+});
+</script></div></body></html>
